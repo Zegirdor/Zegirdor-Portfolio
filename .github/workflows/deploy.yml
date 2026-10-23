@@ -115,5 +115,5 @@ jobs:
 
       - name: Publish site to Nginx directory
         run: |
-          find /var/www/nodejs/wedding-invitation -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+          find /var/www/nodejs/zegirdor-portfolio -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
           cp -a dist/. /var/www/nodejs/zegirdor-portfolio/
