@@ -1,4 +1,4 @@
-name: Deploy portfolio to homeserver
+name: Zegirdor's Portfolio Build on GitHub Pages or Self-hosted runner, then deploy on both
 
 on:
   push:
@@ -14,27 +14,106 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    name: Build and deploy portfolio
+  build-on-github:
+    name: Build on GitHub
     if: github.ref == 'refs/heads/main'
-    runs-on: self-hosted
-
+    runs-on: ubuntu-latest
     steps:
+
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Set up Node.js
+      - name: Install Node JS
         uses: actions/setup-node@v7
         with:
           node-version: 24
 
-      - name: Install dependencies
+      - name: Install Node dependencies
         run: npm ci
 
-      - name: Build static site
-        run: npm run build
+      - name: Build Node project
+        run: npm run build -- --base=./
 
-      - name: Publish to Nginx document root
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v5
+        with:
+          name: zegirdor-portfolio-pages-artifact
+          path: dist/
+
+      - name: Upload artifact for serf-hosted runners
+        uses: actions/upload-artifact@v7
+        with:
+          name: zegirdor-portfolio-homeserver-artifact
+          path: dist/
+          if-no-files-found: error
+
+  build-on-homeserver:
+    name: Build on Home server
+    runs-on: self-hosted
+    needs: build-on-github
+    if: failure() && needs.build-on-github.result == 'failure' && github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Node JS
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build Node project
+        run: npm run build -- --base=./
+
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v5
+        with:
+          name: zegirdor-portfolio-pages-artifact-fallback
+          path: dist/
+
+      - name: Upload artifact for serf-hosted runners
+        uses: actions/upload-artifact@v7
+        with:
+          name: zegirdor-portfolio-homeserver-artifact-fallback
+          path: dist/
+          if-no-files-found: error
+
+  deploy-to-github-pages:
+    name: Deploy to GitHub Pages
+    needs: [build-on-github, build-on-homeserver]
+    if: >-
+      always() && (needs.build-on-github.result == 'success' || needs.build-on-homeserver.result == 'success') && github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - name: Github Pages deploy
+        id: deployment
+        uses: actions/deploy-pages@v5
+        with:
+          artifact_name: ${{ needs.build-on-github.result == 'success' && 'zegirdor-portfolio-pages-artifact' || 'zegirdor-portfolio-pages-artifact-fallback' }}
+  
+  deploy-to-homeserver:
+    name: Deploy to Home server
+    needs: [build-on-github, build-on-homeserver]
+    if: >-
+      always() && (needs.build-on-github.result == 'success' || needs.build-on-homeserver.result == 'success') && github.ref == 'refs/heads/main'
+    runs-on: self-hosted
+    steps:
+      - name: Download regular artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ needs.build-on-github.result == 'success' && 'zegirdor-portfolio-homeserver-artifact' || 'zegirdor-portfolio-homeserver-artifact-fallback' }}
+          path: dist/
+
+      - name: Publish site to Nginx directory
         run: |
-          find /var/www/nodejs/zegirdor-portfolio -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
-          cp -a dist/. /var/www/nodejs/zegirdor-portfolio/
+          find /var/www/nodejs/wedding-invitation -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
+          cp -a dist/. /var/www/nodejs/wedding-invitation/
