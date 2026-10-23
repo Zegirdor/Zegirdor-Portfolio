@@ -40,7 +40,7 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           name: zegirdor-portfolio-pages-artifact
-          path: dist/
+          path: /dist
 
       - name: Upload artifact for serf-hosted runners
         uses: actions/upload-artifact@v7
