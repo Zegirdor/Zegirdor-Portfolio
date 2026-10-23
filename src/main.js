@@ -9,6 +9,7 @@ import App from './App.vue'
 const app = createApp(App)
 
 app.use(PrimeVue, {
+  license: import.meta.env.VITE_PRIMEUI_LICENSE,
   ripple: true,
   theme: {
     preset: Aura,

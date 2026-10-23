@@ -51,7 +51,7 @@ watch(darkMode, (enabled) => {
 onMounted(async () => {
   darkMode.value = localStorage.getItem('portfolio-theme') === 'dark'
   try {
-    const response = await fetch('/data/projects.json')
+    const response = await fetch(`${import.meta.env.BASE_URL}data/projects.json`)
     if (!response.ok) throw new Error('Project data is not available yet.')
     projects.value = await response.json()
   } catch {
