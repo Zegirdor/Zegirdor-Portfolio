@@ -386,3 +386,7 @@ h1 span {
     flex-direction: column;
   }
 }
+
+.capitalize-text {
+  text-transform: capitalize;
+}

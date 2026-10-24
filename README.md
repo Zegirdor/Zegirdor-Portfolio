@@ -1,55 +1,73 @@
 # ZegirdorDev Portfolio
 
-A clean, professional portfolio landing page. The site will be generated as static files from PostgreSQL records and served by Nginx on the Debian homeserver.
-
-## Stack
-
-- Vue 3 for the frontend
-- Vite for development and static builds
-- PrimeVue for UI components, icons, and theme tokens
-- PostgreSQL as the source of project entries
-- Nginx for serving the generated site
+A single-page portfolio built with Vue 3, Vite, and PrimeVue. It is deployed as static files to GitHub Pages and to Nginx on the Debian home server.
 
 ## Current state
 
-The Vue/Vite app is scaffolded and PrimeVue is installed. The page has a responsive portfolio layout, a DataView with grid/list layouts, Card project entries, technology chips, a light/dark toggle, a demo confirmation popover, optional determinate project progress, and loading skeletons. The generated `public/data/projects.json` is currently empty.
+The English-language page has a responsive header, hero section, Projects, About, and Contact sections. Projects support grid and list layouts, filtering by technology, repository links, and an optional confirmation before opening a demo. The theme toggle switches between light and dark modes and saves the choice in the browser's Local Storage.
 
-The database build step is not connected yet. The next implementation step is to agree on the PostgreSQL schema and SDB mount path, then add a Node build script that:
+Project data is loaded from `public/data/projects.json`, which currently contains an empty array. The PostgreSQL schema and the build script that will read public entries and package screenshots have not been implemented yet. The browser receives only the generated JSON and image files; it does not connect to PostgreSQL or access server filesystem paths.
 
-1. Reads public project rows from the local `portfolio` PostgreSQL database.
-2. Copies each selected screenshot from SDB into the build's static assets, using a default image when one is missing.
-3. Writes project data to `public/data/projects.json`.
-4. Runs the Vite production build.
+The About section and its MeterGroup are placeholders. The Contact section does not yet have a form. English/Spanish translations, a language selector, and separate language URLs are still undecided or pending. See [TODO.md](TODO.md) for planned work and [implementations.md](implementations.md) for the selected UI components.
 
-The visitor's browser receives only generated files. It cannot access PostgreSQL or arbitrary server filesystem paths. Data or image changes appear after a new build and deployment.
+## Stack
 
-## Run locally
+- Vue 3 and Vite
+- PrimeVue 5 with the Aura theme and PrimeIcons
+- PostgreSQL as the planned source of project records
+- Nginx for the home-server deployment
+- GitHub Actions for building and publishing the static site
+
+## Run and build locally
+
+Use Node.js 24 and npm:
 
 ```sh
+npm ci
 npm run dev
 ```
 
-Create a production build with:
+Create a production build:
 
 ```sh
-npm run build
+npm run build -- --base=./
 ```
 
-The static build is written to `dist/`. Vite's preview server is for local preview, not production hosting; use Nginx on the server.
+The output is written to `dist/`. The relative base path supports deployment under a GitHub Pages project URL as well as the Nginx site root. To preview a production build locally, run:
 
-## Security and deployment
+```sh
+npm run preview
+```
 
-- Never expose PostgreSQL through Cloudflare Tunnel or the public web server.
-- The build script should use a least-privilege read-only database role and server-side environment variables.
-- Keep credentials out of Git and browser bundles.
-- Copy only selected screenshots into the deployment output; do not expose the SDB mount itself.
-- Keep the portfolio document root separate from the wedding site's deployment directory.
-- The self-hosted GitHub Actions runner has no sudo privileges; do not add untrusted workflow triggers.
+## Project data format
 
-## Data model notes
+The frontend currently reads a JSON array from `public/data/projects.json`. Each project can use these fields:
 
-The database is planned as `portfolio`; `repository` is the proposed project table name. Candidate fields include `id`, `name`, `description`, `version`, a project date, `repository_url`, optional demo and screenshot paths, `visible`, and timestamps. PostgreSQL has no native URL type; use `TEXT` and validate URLs in the build/application layer.
+| Field | Purpose |
+|---|---|
+| `id` | Stable identifier used by Vue for the project entry |
+| `name` | Project title |
+| `description` | Short project description |
+| `version` | Optional version label |
+| `projectDate` | Optional project date |
+| `technologies` | Array of technology labels used for filtering |
+| `repositoryUrl` | Repository link |
+| `demoUrl` | Optional full demo link |
+| `screenshotUrl` | Optional screenshot URL in the generated site |
+| `screenshotAlt` | Optional screenshot description |
+| `completion` | Optional completion percentage shown for in-progress projects |
 
-For a tiny fixed vocabulary, `TEXT[]` is simple. For a reusable technology catalog and consistent chips, prefer a `technology` table plus a join table from projects to technologies. A PostgreSQL enum is less convenient when the vocabulary changes. Keep a project's date separate from `created_at`, which records when the database row was added.
+The future database build step should select only entries marked visible, copy approved screenshots into the static output, use the default image when one is not supplied, and generate this JSON. Database credentials and screenshot filesystem paths must stay server-side and must not be included in the generated site.
 
-See [implementations.md](implementations.md) for the component reference. `Memory.md` is ChatGPT's local continuity file and is intentionally excluded from the public Git repository.
+## Deployment
+
+The workflow in `.github/workflows/deploy.yml` runs for pushes to `main` and supports manual dispatch. It first builds on a GitHub-hosted runner. If that build fails, it attempts the build on the self-hosted home-server runner. The successful build output is then deployed to both destinations:
+
+- GitHub Pages
+- Nginx document root: `/var/www/nodejs/zegirdor-portfolio`
+
+The workflow requires the `VITE_PRIMEUI_LICENSE` GitHub Actions secret for the build. Keep database credentials out of the repository and out of the browser bundle; the database integration is not part of the current build yet.
+
+## License
+
+This project is released under the MIT License. See [LICENSE](LICENSE).

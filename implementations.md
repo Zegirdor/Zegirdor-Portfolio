@@ -9,8 +9,8 @@ This page records the selected frontend technologies and PrimeVue components, th
 | Vue | [Vue quick start](https://vuejs.org/guide/quick-start.html) | Frontend framework for reusable sections, project cards, theme state, and technology filters. |
 | Vite | [Vite static deployment](https://vite.dev/guide/static-deploy) | Development server and production bundler. The output is static files for Nginx. |
 | PrimeVue | [PrimeVue installation](https://primevue.dev/installation/) | Vue component library used for the selected controls and cards. Installed in the project. |
-| Aura theme | [PrimeVue styled theming](https://primevue.dev/theming/styled/) | Starting design-token preset. The app uses `.app-dark` as a toggleable dark-mode selector so theme styling can be customized consistently. |
-| PrimeIcons | [PrimeIcons](https://primevue.dev/icons/) | Icons for navigation, view controls, theme toggle, and external links. |
+| Aura theme | [PrimeVue styled theming](https://primevue.dev/theming/styled/) | Starting design-token preset. `darkModeSelector` is configured as `.theme-Dark` to match the class applied by the theme watcher. The user reports the Dark palette still does not switch, so this remains under investigation. |
+| PrimeIcons | [PrimeIcons](https://primevue.dev/icons/) | Icons for navigation, view controls, theme options, and external links. |
 
 ## Main content and navigation
 
@@ -18,7 +18,8 @@ This page records the selected frontend technologies and PrimeVue components, th
 |---|---|---|
 | DataView | [DataView sorting example](https://primevue.dev/dataview/#sorting) | Main project listing, with a grid/list layout switch. The listing will be populated from generated static JSON based on PostgreSQL records. |
 | Card | [Card advanced example](https://primevue.dev/card/#advanced) | Visual container for each project: screenshot, name, version/date, description, technology chips, progress (when applicable), and repository/demo links. |
-| Toolbar | [Toolbar](https://primevue.dev/toolbar/) | Header bar for the site brand, Projects/About/Contact navigation, and theme switch. The earlier Card link was not the Toolbar documentation, so this is the corrected component URL. |
+| Toolbar | [Toolbar](https://primevue.dev/toolbar/) | Header bar for the site brand, Projects/About/Contact navigation, and theme selector. The earlier Card link was not the Toolbar documentation, so this is the corrected component URL. |
+| Select | [Select](https://primevue.dev/select/) | Theme selector with Light, Dark, and Matrix choices. Custom `#option` and `#value` slots display each theme's icon and name; the selected theme name is persisted in Local Storage. The user's `.capitalize-text` class changes display only. |
 
 ## Project interactions
 

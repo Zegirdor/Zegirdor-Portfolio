@@ -13,7 +13,7 @@ app.use(PrimeVue, {
   ripple: true,
   theme: {
     preset: Aura,
-    options: { darkModeSelector: '.app-dark' },
+    options: { darkModeSelector: '.theme-Dark' },
   },
 })
 
