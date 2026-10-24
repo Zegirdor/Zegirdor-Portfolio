@@ -207,7 +207,19 @@ onMounted(async () => {
 
 			<section id="contact" class="contact-section section-wrap">
 				<div><p class="eyebrow">Get in touch</p><h2>I'm looking for a job</h2></div>
-				<p>The contact form and its secure submission endpoint can be added in a later step.</p>
+				<p>
+					<span>
+						Cellphone: 6674012603 <i class="pi pi-whatsapp"></i>
+					</span>
+					<br>
+					<span>
+						E-Mail(s):<br>Zegirdor2165@Gmail.com<br>Zegirdor@Hotmail.com<br>Zegirdor1@Outlook.com.
+					</span>
+					<br>
+					<span>
+						GitHub:<br><a href="https://github.com/Zegirdor" class="eyebrow">Zegirdor <i class="pi pi-github"></i></a>
+					</span>
+				</p>
 			</section>
 		</main>
 
