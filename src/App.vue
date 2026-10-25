@@ -10,6 +10,7 @@ import ProgressSpinner from 'primevue/progressspinner'
 import Skeleton from 'primevue/skeleton'
 import Toolbar from 'primevue/toolbar'
 import Select from 'primevue/select'
+import { useI18n } from 'vue-i18n'
 
 const projects = ref([])
 const loading = ref(true)
@@ -33,6 +34,8 @@ const visibleProjects = computed(() => {
 		),
 	)
 })
+
+const { t: i18n, locale } = useI18n();
 
 function toggleTechnology(technology) {
 	selectedTechnologies.value = selectedTechnologies.value.includes(technology)
@@ -83,16 +86,16 @@ onMounted(async () => {
 				</template>
 				<template #center>
 					<nav class="main-nav" aria-label="Main sections">
-						<a href="#projects">Projects</a>
-						<a href="#about">About</a>
-						<a href="#contact">Contact</a>
+						<a href="#projects" v-html="i18n('navigation.projects')"></a>
+						<a href="#about" v-html="i18n('navigation.about')"></a>
+						<a href="#contact" v-html="i18n('navigation.contact')"></a>
 					</nav>
 				</template>
 				<template #end>
 					<Select v-ripple v-model="selectedTheme" :options="themes" option-label="theme" option-value="theme" aria-label="Choose theme" class="capitalize-text">
 						<template #option="{ option }">
 							<i :class="option.icon" aria-hidden="true"></i>
-							<span class="capitalize-text">&nbsp;{{ option.theme }}</span>
+							<span class="capitalize-text">&nbsp;{{ i18n(`themes.${option.theme}`) }}</span>
 						</template>
 						<template #value="{ value }">
 							<span v-if="value">
@@ -100,7 +103,7 @@ onMounted(async () => {
 									:class="themes.find((item) => item.theme === value)?.icon"
 									aria-hidden="true"
 								></i>
-								{{ value }}
+								{{ i18n(`themes.${value}`) }}
 							</span>
 						</template>
 					</Select>
@@ -110,15 +113,15 @@ onMounted(async () => {
 
 		<main id="home">
 			<section class="hero section-wrap">
-				<p class="eyebrow">Developer portfolio</p>
-				<h1>Building useful things<br /><span>with thoughtful technology.</span></h1>
-				<p class="hero-copy">A home for selected projects, experiments, and the tools behind them.</p>
-				<a class="hero-link" href="#projects">Explore projects <i class="pi pi-arrow-down" /></a>
+				<p class="eyebrow" v-html="i18n('hero_section.title_1')"></p>
+				<h1 v-html="i18n('hero_section.title_2')"></h1>
+				<p class="hero-copy" v-html="i18n('hero_section.title_3')"></p>
+				<a class="hero-link" href="#projects">{{ i18n('hero_section.link_projects') }}&nbsp;<i class="pi pi-arrow-down"></i></a>
 			</section>
 
 			<section id="projects" class="projects-section section-wrap">
 				<div class="section-heading">
-					<div><p class="eyebrow">Selected work</p><h2>Projects</h2></div>
+					<div><p class="eyebrow" v-html="i18n('projects_section.title_1')"></p><h2 v-html="i18n('projects_section.title_2')"></h2></div>
 					<div class="view-switch" aria-label="Project layout">
 						<Button v-ripple icon="pi pi-th-large" :outlined="layout !== 'grid'" aria-label="Grid view" @click="layout = 'grid'" />
 						<Button v-ripple icon="pi pi-list" :outlined="layout !== 'list'" aria-label="List view" @click="layout = 'list'" />
@@ -146,9 +149,7 @@ onMounted(async () => {
 						</template>
 					</Card>
 				</div>
-				<p v-else-if="loadError" class="empty-state" role="status">
-					Project data will appear here after the database build step is configured.
-				</p>
+				<p v-else-if="loadError" class="empty-state" role="status" v-html="i18n('projects_section.missing_database')"></p>
 
 				<DataView v-else :value="visibleProjects" :layout="layout" class="project-listing">
 					<template #grid="{ items }">
@@ -187,50 +188,38 @@ onMounted(async () => {
 									<div class="project-list-copy">
 										<h3>{{ project.name }}</h3><p>{{ project.description }}</p>
 										<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
-										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">Repository <i class="pi pi-arrow-up-right" /></a>
+										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">Repository <i class="pi pi-arrow-up-right"></i></a>
 									</div>
 								</template>
 							</Card>
 						</div>
 					</template>
-					<template #empty><p class="empty-state">No visible projects yet. Add entries to PostgreSQL and rebuild to publish them.</p></template>
+					<template #empty><p class="empty-state" v-html="i18n('projects_section.missing_projects')"></p></template>
 				</DataView>
 			</section>
 
 			<section id="about" class="about-section section-wrap">
-				<div><p class="eyebrow">A little about me</p><h2>Curiosity, craft, and continuous learning.</h2></div>
+				<div><p class="eyebrow" v-html="i18n('about_section.title_1')"></p><h2 v-html="i18n('about_section.title_2')"></h2></div>
 				<div class="about-copy">
-					<p>This section is ready for your bio and the skills you want to highlight.</p>
-					<MeterGroup :value="[]" aria-label="Skills summary placeholder" />
+					<p v-html="i18n('about_section.info_1')"></p>
+					<MeterGroup :value="[]" aria-label="Skills summary" />
 				</div>
 			</section>
 
 			<section id="contact" class="contact-section section-wrap">
-				<div><p class="eyebrow">Get in touch</p><h2>I'm looking for a job</h2></div>
-				<p>
-					<span>
-						Cellphone: 6674012603 <i class="pi pi-whatsapp"></i>
-					</span>
-					<br>
-					<span>
-						E-Mail(s):<br>Zegirdor2165@Gmail.com<br>Zegirdor@Hotmail.com<br>Zegirdor1@Outlook.com.
-					</span>
-					<br>
-					<span>
-						GitHub:<br><a href="https://github.com/Zegirdor" class="eyebrow">Zegirdor <i class="pi pi-github"></i></a>
-					</span>
-				</p>
+				<div><p class="eyebrow" v-html="i18n('contact_section.title_1')"></p><h2 v-html="i18n('contact_section.info_1')"></h2></div>
+				<p v-html="i18n('contact_section.info_2')"></p>
 			</section>
 		</main>
 
 		<footer class="site-footer section-wrap">
 			<span>© {{ new Date().getFullYear() }} ZegirdorDev</span>
-			<span>Built with Vue, Vite, and PrimeVue</span>
+			<span v-html="i18n('footer.title_2')"></span>
 		</footer>
 
 		<Popover ref="demoPopover">
 			<div v-focustrap class="demo-confirmation">
-				<p>Open the full project demo in a new tab?</p>
+				<p v-html="i18n('projects.open_full_tab_dialogue')"></p>
 				<a :href="selectedDemoUrl" target="_blank" rel="noopener noreferrer" @click="demoPopover.hide()">Continue to demo <i class="pi pi-arrow-up-right" /></a>
 			</div>
 		</Popover>
