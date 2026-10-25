@@ -11,6 +11,8 @@ import Skeleton from 'primevue/skeleton'
 import Toolbar from 'primevue/toolbar'
 import Select from 'primevue/select'
 import { useI18n } from 'vue-i18n'
+import englishFlag from './assets/locale_flags/en_64x64.png'
+import spanishFlag from './assets/locale_flags/es_64x64.png'
 
 const projects = ref([])
 const loading = ref(true)
@@ -19,6 +21,11 @@ const layout = ref('grid')
 const selectedTechnologies = ref([])
 const themes = [{theme: "light", icon: "pi pi-sun"}, {theme : "dark", icon : "pi pi-moon"}, {theme : "matrix", icon : "pi pi-code"}]
 const selectedTheme = ref(getInitialTheme())
+const languageOptions = [
+	{ code: 'es', name: 'Español', flag: spanishFlag },
+	{ code: 'en', name: 'English', flag: englishFlag },
+]
+const selectedLanguage = ref(getInitialLanguage())
 const demoPopover = ref()
 const selectedDemoUrl = ref('')
 
@@ -36,6 +43,10 @@ const visibleProjects = computed(() => {
 })
 
 const { t: i18n, locale } = useI18n();
+
+function getLanguageOption(code) {
+	return languageOptions.find((option) => option.code === code)
+}
 
 function toggleTechnology(technology) {
 	selectedTechnologies.value = selectedTechnologies.value.includes(technology)
@@ -59,9 +70,22 @@ watch(selectedTheme, (themeName) => {
 {immediate: true} // Makes the watcher apply changes as soon as it's created so it applies the saved theme upon page load.
 )
 
+// Apply the saved language and keep Vue I18n and Local Storage in sync.
+watch(selectedLanguage, (languageCode) => {
+	locale.value = languageCode
+	localStorage.setItem('zegirdor-portfolio-language', languageCode)
+},
+{immediate: true}
+)
+
 function getInitialTheme() {
 	const savedTheme = localStorage.getItem('zegirdor-portfolio-theme')
 	return themes.some((themeData) => themeData.theme === savedTheme) ? savedTheme : themes[0].theme
+}
+
+function getInitialLanguage() {
+	const savedLanguage = localStorage.getItem('zegirdor-portfolio-language')
+	return languageOptions.some((option) => option.code === savedLanguage) ? savedLanguage : 'es'
 }
 
 onMounted(async () => {
@@ -92,21 +116,38 @@ onMounted(async () => {
 					</nav>
 				</template>
 				<template #end>
-					<Select v-ripple v-model="selectedTheme" :options="themes" option-label="theme" option-value="theme" aria-label="Choose theme" class="capitalize-text">
-						<template #option="{ option }">
-							<i :class="option.icon" aria-hidden="true"></i>
-							<span class="capitalize-text">&nbsp;{{ i18n(`themes.${option.theme}`) }}</span>
-						</template>
-						<template #value="{ value }">
-							<span v-if="value">
-								<i
-									:class="themes.find((item) => item.theme === value)?.icon"
-									aria-hidden="true"
-								></i>
-								{{ i18n(`themes.${value}`) }}
-							</span>
-						</template>
-					</Select>
+					<div class="toolbar-preferences">
+						<Select v-ripple v-model="selectedLanguage" :options="languageOptions" option-label="name" option-value="code" aria-label="Choose language" class="language-select">
+							<template #option="{ option }">
+								<span class="language-option">
+									<img class="language-flag" :src="option.flag" alt="" aria-hidden="true" />
+									<span>{{ option.name }}</span>
+								</span>
+							</template>
+							<template #value="{ value }">
+								<span v-if="getLanguageOption(value)" class="language-option">
+									<img class="language-flag" :src="getLanguageOption(value).flag" alt="" aria-hidden="true" />
+									<span>{{ getLanguageOption(value).name }}</span>
+								</span>
+							</template>
+						</Select>
+
+						<Select v-ripple v-model="selectedTheme" :options="themes" option-label="theme" option-value="theme" aria-label="Choose theme" class="capitalize-text">
+							<template #option="{ option }">
+								<i :class="option.icon" aria-hidden="true"></i>
+								<span class="capitalize-text">&nbsp;{{ i18n(`themes.${option.theme}`) }}</span>
+							</template>
+							<template #value="{ value }">
+								<span v-if="value">
+									<i
+										:class="themes.find((item) => item.theme === value)?.icon"
+										aria-hidden="true"
+									></i>
+									{{ i18n(`themes.${value}`) }}
+								</span>
+							</template>
+						</Select>
+					</div>
 				</template>
 			</Toolbar>
 		</header>
