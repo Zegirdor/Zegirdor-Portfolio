@@ -106,7 +106,7 @@ onMounted(async () => {
 		<header class="site-header">
 			<Toolbar class="site-toolbar" aria-label="Main navigation">
 				<template #start>
-					<a class="brand" href="#home" aria-label="ZegirdorDev home">Zegirdor<span>Dev</span></a>
+					<a class="brand" href="#home" aria-label="ZegirdorDev home" v-html="i18n('navigation.presentation')"></a>
 				</template>
 				<template #center>
 					<nav class="main-nav" aria-label="Main sections">

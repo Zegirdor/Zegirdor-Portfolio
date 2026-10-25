@@ -6,6 +6,7 @@
 - [ ] Revisit whether separate English and Spanish URLs are worthwhile
 - [ ] Decide whether to add the WD Ghaster/Wingdings locale after the standard translations are stable
 - [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
+- [ ] Add the database schema and table population data to the project.
 
 # Completed Tasks
 
