@@ -1,4 +1,4 @@
-import { copyFile, mkdir, writeFile } from 'node:fs/promises'
+import { chmod, copyFile, mkdir, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import pg from 'pg'
@@ -63,6 +63,10 @@ try {
 			try {
 				await mkdir(screenshotDirectory, { recursive: true })
 				await copyFile(row.screenshotPath, path.join(screenshotDirectory, screenshotFileName))
+				
+				const destination = path.join(screenshotDirectory, screenshotFileName)
+				await copyFile(row.screenshotPath, destination)
+				await chmod(destination, 0o644)
 			} catch {
 				throw new Error('Could not copy the screenshot for project ID ' + row.id + '. Check its database path and runner read permissions.')
 			}
