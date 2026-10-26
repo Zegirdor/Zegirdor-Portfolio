@@ -228,7 +228,7 @@ onMounted(async () => {
 								<template #footer>
 									<div class="project-actions">
 										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">{{ i18n('projects.repository') }}&nbsp;<i class="pi pi-arrow-up-right" /></a>
-										<Button v-if="project.demoUrl" v-ripple label="View demo2" icon="pi pi-external-link" text @click="askBeforeDemo($event, project.demoUrl)" />
+										<Button v-if="project.demoUrl" v-ripple :label="i18n('projects.view_demo')" icon="pi pi-external-link" text @click="askBeforeDemo($event, project.demoUrl)" />
 									</div>
 								</template>
 							</Card>
@@ -274,7 +274,7 @@ onMounted(async () => {
 		<Popover ref="demoPopover">
 			<div v-focustrap class="demo-confirmation">
 				<p v-html="i18n('projects.open_full_tab_dialogue')"></p>
-				<a :href="selectedDemoUrl" target="_blank" rel="noopener noreferrer" @click="demoPopover.hide()">Continue to demo <i class="pi pi-arrow-up-right" /></a>
+				<a :href="selectedDemoUrl" target="_blank" rel="noopener noreferrer" @click="demoPopover.hide()">{{ i18n('projects.continue_to_demo') }}&nbsp;<i class="pi pi-arrow-up-right" /></a>
 			</div>
 		</Popover>
 	</div>

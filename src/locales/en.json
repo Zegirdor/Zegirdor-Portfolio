@@ -26,6 +26,8 @@
         "version": "Version",
         "in_progress": "In progress",
         "repository": "GitHub Repository",
+        "view_demo": "View demo",
+        "continue_to_demo": "Continue to demo",
         "open_full_tab_dialogue": "Open the full project demo in a new tab?"
     },
     "about_section": {
