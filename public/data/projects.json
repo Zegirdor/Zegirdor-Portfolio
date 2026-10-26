@@ -1,1 +1,32 @@
-[]
+[
+  {
+    "id": "1",
+    "name": {
+      "en": "Wedding Invitation",
+      "es": "Invitación de Boda"
+    },
+    "description": {
+      "en": "A Web based invitation card used at my wedding. I built it using NodeJS with Vite as the build tool, and Tailwind as the component's library.",
+      "es": "Una página web creada para funcionar como una invitación para mi boda. La desarrollé en NodeJS, usando Vite como la herramienta de ensamblado, y Tailwind como biblioteca para los componentes."
+    },
+    "repositoryUrl": "https://github.com/Zegirdor/wedding-invitation",
+    "demoUrl": "https://wedding.zegirdordev.com/",
+    "screenshotUrl": "images/project_screenshots/1.png",
+    "version": "1.0.2",
+    "projectDate": "2026-08-02",
+    "authors": [
+      "Luis Ángel Moreno"
+    ],
+    "technologies": [
+      "CSS",
+      "Git",
+      "GitHub",
+      "HTML5",
+      "JavaScript",
+      "Node.js",
+      "Tailwind CSS",
+      "Vite"
+    ],
+    "completion": 100
+  }
+]

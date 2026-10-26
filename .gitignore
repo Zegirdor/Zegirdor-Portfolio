@@ -29,3 +29,6 @@ dist-ssr
 
 # Local assistant continuity notes (not published)
 Memory.md
+
+# Special folder to store placeholder images of projects during test builds
+special_folder/ 

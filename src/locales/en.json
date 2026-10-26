@@ -25,6 +25,7 @@
     "projects": {
         "version": "Version",
         "in_progress": "In progress",
+        "complete": "Complete",
         "repository": "GitHub Repository",
         "view_demo": "View demo",
         "continue_to_demo": "Continue to demo",

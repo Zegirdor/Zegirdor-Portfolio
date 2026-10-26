@@ -269,8 +269,13 @@ h1 span {
 }
 
 .project-progress .p-progressspinner {
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.50rem;
+  height: 2.50rem;
+}
+
+.project-progress .p-progressspinner-value {
+	font-size: 30px;
+	font-weight: 700;
 }
 
 .project-list {
@@ -403,4 +408,33 @@ h1 span {
 
 .capitalize-text {
   text-transform: capitalize;
+}
+
+/* .wingdings-message {
+  font-family: Wingdings;
+} */
+
+@font-face {
+  font-family: 'Wingdings';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Wingdings'), url('assets/fonts/wingding.woff') format('woff');
+}
+
+/* Apply Wingdings throughout the page, including overlays. */
+.locale-wd * {
+	font-family: 'Wingdings', sans-serif;
+}
+
+/* Keep the language selector and its dropdown options readable. */
+.locale-wd .language-select,
+.locale-wd .language-select *,
+.locale-wd .language-option,
+.locale-wd .language-option * {
+	font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Preserve PrimeIcons. */
+.locale-wd .pi {
+	font-family: 'primeicons';
 }

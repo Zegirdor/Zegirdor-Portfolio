@@ -13,6 +13,7 @@ import Select from 'primevue/select'
 import { useI18n } from 'vue-i18n'
 import englishFlag from './assets/locale_flags/en_64x64.png'
 import spanishFlag from './assets/locale_flags/es_64x64.png'
+import ghasterFlag from './assets/locale_flags/wd_128x128.png'
 
 const projects = ref([])
 const loading = ref(true)
@@ -24,6 +25,7 @@ const selectedTheme = ref(getInitialTheme())
 const languageOptions = [
 	{ code: 'es', name: 'Español', flag: spanishFlag },
 	{ code: 'en', name: 'English', flag: englishFlag },
+	{ code: 'wd', name: 'WD Ghaster', flag: ghasterFlag },
 ]
 const selectedLanguage = ref(getInitialLanguage())
 const demoPopover = ref()
@@ -86,7 +88,10 @@ watch(selectedTheme, (themeName) => {
 // Apply the saved language and keep Vue I18n and Local Storage in sync.
 watch(selectedLanguage, (languageCode) => {
 	locale.value = languageCode
-	localStorage.setItem('zegirdor-portfolio-language', languageCode)
+	document.documentElement.classList.toggle('locale-wd', languageCode === 'wd')
+	if (languageCode !== 'wd') {
+		localStorage.setItem('zegirdor-portfolio-language', languageCode)
+	}
 },
 {immediate: true}
 )
@@ -215,13 +220,14 @@ onMounted(async () => {
 								<template #title>{{ projectText(project.name) }}</template>
 								<template #subtitle>
 									<span v-if="project.version">{{ i18n('projects.version') }}&nbsp;{{ project.version }}</span>
+									<span v-if="project.version && project.projectDate">&nbsp;&mdash;&nbsp;</span>
 									<span v-if="project.projectDate">{{ project.projectDate }}</span>
 								</template>
 								<template #content>
 									<p class="project-description">{{ projectText(project.description) }}</p>
 									<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
 									<div v-if="project.completion != null" class="project-progress">
-										<span>{{ i18n('projects.in_progress') }}</span>
+										<span>{{ i18n(project.completion === 100 ? 'projects.complete' : 'projects.in_progress') }}</span>
 										<ProgressSpinner :value="project.completion" :pt="{ root: { 'aria-label': `${project.completion}% complete` } }" />
 									</div>
 								</template>
@@ -238,11 +244,27 @@ onMounted(async () => {
 						<div class="project-list">
 							<Card v-for="project in items" :key="project.id" class="project-card project-card-list">
 								<template #content>
-									<img class="project-image" :src="projectImageUrl(project)" :alt="projectText(project.name) + ' screenshot'" loading="lazy" />
+									<div class="project-list-media">
+										<img class="project-image" :src="projectImageUrl(project)" :alt="projectText(project.name) + ' screenshot'" loading="lazy" />
+										<div v-if="project.completion != null" class="project-progress">
+											<span>{{ i18n(project.completion === 100 ? 'projects.complete' : 'projects.in_progress') }}</span>
+											<ProgressSpinner :value="project.completion" :pt="{ root: { 'aria-label': `${project.completion}% complete` } }" />
+										</div>
+									</div>
+									
 									<div class="project-list-copy">
-										<h3>{{ projectText(project.name) }}</h3><p>{{ projectText(project.description) }}</p>
+										<h3>{{ projectText(project.name) }}</h3>
+										<p>{{ projectText(project.description) }}</p>
+										<div class="project-subtitle">
+											<span v-if="project.version">{{ i18n('projects.version') }}&nbsp;{{ project.version }}</span>
+											&nbsp;&mdash;&nbsp;
+											<span v-if="project.projectDate">{{ project.projectDate }}</span>
+										</div>
 										<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
-										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">{{ i18n('projects.repository') }}&nbsp;<i class="pi pi-arrow-up-right"></i></a>
+										<div class="project-actions">
+											<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">{{ i18n('projects.repository') }}&nbsp;<i class="pi pi-arrow-up-right"></i></a>
+											<Button v-if="project.demoUrl" v-ripple :label="i18n('projects.view_demo')" icon="pi pi-external-link" text @click="askBeforeDemo($event, project.demoUrl)" />
+										</div>
 									</div>
 								</template>
 							</Card>

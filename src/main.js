@@ -21,7 +21,7 @@ app.use(PrimeVue, {
 })
 
 const i18n = createI18n({
-  messages: {es, en},
+  messages: { es, en, wd: en },
   locale: 'es',
   fallbackLocale: 'es',
   legacy: false

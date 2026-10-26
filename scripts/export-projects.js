@@ -60,11 +60,16 @@ try {
 
 			const screenshotFileName = String(row.id) + extension
 
+			// Locally it uses a local screenshots folder, and on Linux it uses the server's file.
+			const screenshotSource = process.env.PORTFOLIO_SCREENSHOT_DIR
+			? path.resolve(projectRoot, process.env.PORTFOLIO_SCREENSHOT_DIR, screenshotFileName)
+			: row.screenshotPath
+
 			try {
 				await mkdir(screenshotDirectory, { recursive: true })
 				
 				const destination = path.join(screenshotDirectory, screenshotFileName)
-				await copyFile(row.screenshotPath, destination)
+				await copyFile(screenshotSource, destination)
 				await chmod(destination, 0o644)
 			} catch {
 				throw new Error('Could not copy the screenshot for project ID ' + row.id + '. Check its database path and runner read permissions.')

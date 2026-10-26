@@ -1,14 +1,15 @@
-﻿# Pending Tasks
+# Pending Tasks
 
-- [ ] Design the PostgreSQL schema and add a SQL initialization script (without credentials)
-- [ ] Translate remaining hard-coded interface text and accessibility labels
+- [ ] Translate remaining hard-coded interface text and accessibility labels (filters, layout/selector labels, screenshot descriptions, and completion announcements)
+- [ ] Update project-loading error messages now that the database export is configured
 - [ ] Add a Matrix theme
-- [ ] Revisit whether separate English and Spanish URLs are worthwhile
-- [ ] Decide whether to add the WD Ghaster/Wingdings locale after the standard translations are stable
+- [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
+- [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
 - [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
-- [ ] Add the database schema and table population data to the project.
-- [ ] Create a script to fetch data at runtime
-- [ ] Change the build order so it builds first on the self-worker
+- [ ] Review exporter TODOs: share the screenshot path definition, improve SQL formatting, and review the explicit JSON mapping
+- [ ] Preserve the original filesystem error details when screenshot copying fails
+- [ ] Change screenshot retrieval so an unreadable configured source uses the default screenshot instead of aborting the build
+- [ ] Confirm WD font rendering and language-selector readability in the browser
 
 # Completed Tasks
 
@@ -19,5 +20,23 @@
 - [x] Fix the Dark theme palette using semantic PrimeVue tokens
 - [x] Add English and Spanish locale files and configure Vue I18n
 - [x] Add a toolbar language selector with flags and persist the selected language in Local Storage
-- [x] Keep both languages on one URL for now
-- [x] Update README.md to describe the current state of the page
+- [x] Keep both languages on one URL; separate language URLs are not planned for this project
+- [x] Refresh README.md for translations, selectors, database export, secrets, local development, and server-first deployment
+- [x] Design the PostgreSQL schema and save initialization/population SQL under database/schema/ and database/data/ without credentials
+- [x] Populate the database with the technology catalog, wedding project, and project/technology associations
+- [x] Add the build-time PostgreSQL exporter for visible project records and SDB screenshots
+- [x] Render localized JSONB project names/descriptions and resolve image URLs relative to the Vite base
+- [x] Translate project labels, repository/demo actions, and demo-confirmation text
+- [x] Build on the home server first, with a GitHub fallback that reuses the exported assets
+- [x] Configure the runner's source screenshot access and restart its service; the user confirmed the server build succeeds
+- [x] Set generated screenshot copies to mode 0644 for Nginx readability
+- [x] Confirm screenshot HTTP 200 and project data/images on GitHub Pages (marked complete by the user)
+- [x] Support local Windows builds with PORTFOLIO_SCREENSHOT_DIR and special_folder/project_screenshots; local build/preview confirmed
+- [x] Ignore special_folder in Git using the corrected unquoted rule
+- [x] Add a GIF favicon
+- [x] Add the View demo button to list view and align/style its action row
+- [x] Add version/date information and completion progress beneath the screenshot in list view
+- [x] Enlarge the completion percentage text
+- [x] Show translated Complete/Completado at 100% instead of In progress
+- [x] Add WD Ghaster as an English-backed locale with Wingdings styling, readable language controls, and preserved PrimeIcons
+- [x] Preserve the normal saved language when WD is selected and remove the duplicate wd.json
