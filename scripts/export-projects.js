@@ -62,7 +62,6 @@ try {
 
 			try {
 				await mkdir(screenshotDirectory, { recursive: true })
-				await copyFile(row.screenshotPath, path.join(screenshotDirectory, screenshotFileName))
 				
 				const destination = path.join(screenshotDirectory, screenshotFileName)
 				await copyFile(row.screenshotPath, destination)
