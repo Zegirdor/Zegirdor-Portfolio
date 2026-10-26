@@ -214,21 +214,21 @@ onMounted(async () => {
 								</template>
 								<template #title>{{ projectText(project.name) }}</template>
 								<template #subtitle>
-									<span v-if="project.version">Version {{ project.version }}</span>
+									<span v-if="project.version">{{ i18n('projects.version') }}&nbsp;{{ project.version }}</span>
 									<span v-if="project.projectDate">{{ project.projectDate }}</span>
 								</template>
 								<template #content>
 									<p class="project-description">{{ projectText(project.description) }}</p>
 									<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
 									<div v-if="project.completion != null" class="project-progress">
-										<span>In progress</span>
+										<span>{{ i18n('projects.in_progress') }}</span>
 										<ProgressSpinner :value="project.completion" :pt="{ root: { 'aria-label': `${project.completion}% complete` } }" />
 									</div>
 								</template>
 								<template #footer>
 									<div class="project-actions">
-										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">Repository <i class="pi pi-arrow-up-right" /></a>
-										<Button v-if="project.demoUrl" v-ripple label="View demo" icon="pi pi-external-link" text @click="askBeforeDemo($event, project.demoUrl)" />
+										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">{{ i18n('projects.repository') }}&nbsp;<i class="pi pi-arrow-up-right" /></a>
+										<Button v-if="project.demoUrl" v-ripple label="View demo2" icon="pi pi-external-link" text @click="askBeforeDemo($event, project.demoUrl)" />
 									</div>
 								</template>
 							</Card>

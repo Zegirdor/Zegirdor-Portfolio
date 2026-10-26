@@ -23,6 +23,9 @@
         "missing_database": "Los datos de los proyectos aparecerán aquí después de que se configure una base de datos."
     },
     "projects": {
+        "version": "Versión",
+        "in_progress": "En desarrollo",
+        "repository": "Repositorio de GitHub",
         "open_full_tab_dialogue": "Abrir la demo completa del proyecto en una nueva pestaña?"
     },
     "about_section": {

@@ -23,6 +23,9 @@
         "missing_database": "Project data will appear here after the database build step is configured."
     },
     "projects": {
+        "version": "Version",
+        "in_progress": "In progress",
+        "repository": "GitHub Repository",
         "open_full_tab_dialogue": "Open the full project demo in a new tab?"
     },
     "about_section": {
