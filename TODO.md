@@ -7,6 +7,8 @@
 - [ ] Decide whether to add the WD Ghaster/Wingdings locale after the standard translations are stable
 - [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
 - [ ] Add the database schema and table population data to the project.
+- [ ] Create a script to fetch data at runtime
+- [ ] Change the build order so it builds first on the self-worker
 
 # Completed Tasks
 

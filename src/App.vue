@@ -43,6 +43,19 @@ const visibleProjects = computed(() => {
 })
 
 const { t: i18n, locale } = useI18n();
+const baseUrl = import.meta.env.BASE_URL
+
+function projectText(value) {
+	if (typeof value === 'string') return value
+	if (!value || typeof value !== 'object') return ''
+	return value[locale.value] ?? value.en ?? ''
+}
+
+function projectImageUrl(project) {
+	return project.screenshotUrl
+		? baseUrl + project.screenshotUrl
+		: baseUrl + 'images/default-project.svg'
+}
 
 function getLanguageOption(code) {
 	return languageOptions.find((option) => option.code === code)
@@ -197,15 +210,15 @@ onMounted(async () => {
 						<div class="project-grid">
 							<Card v-for="project in items" :key="project.id" class="project-card">
 								<template #header>
-									<img class="project-image" :src="project.screenshotUrl || '/images/default-project.svg'" :alt="project.screenshotAlt || `${project.name} screenshot`" loading="lazy" />
+									<img class="project-image" :src="projectImageUrl(project)" :alt="projectText(project.name) + ' screenshot'" loading="lazy" />
 								</template>
-								<template #title>{{ project.name }}</template>
+								<template #title>{{ projectText(project.name) }}</template>
 								<template #subtitle>
 									<span v-if="project.version">Version {{ project.version }}</span>
 									<span v-if="project.projectDate">{{ project.projectDate }}</span>
 								</template>
 								<template #content>
-									<p class="project-description">{{ project.description }}</p>
+									<p class="project-description">{{ projectText(project.description) }}</p>
 									<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
 									<div v-if="project.completion != null" class="project-progress">
 										<span>In progress</span>
@@ -225,9 +238,9 @@ onMounted(async () => {
 						<div class="project-list">
 							<Card v-for="project in items" :key="project.id" class="project-card project-card-list">
 								<template #content>
-									<img class="project-image" :src="project.screenshotUrl || '/images/default-project.svg'" :alt="project.screenshotAlt || `${project.name} screenshot`" loading="lazy" />
+									<img class="project-image" :src="projectImageUrl(project)" :alt="projectText(project.name) + ' screenshot'" loading="lazy" />
 									<div class="project-list-copy">
-										<h3>{{ project.name }}</h3><p>{{ project.description }}</p>
+										<h3>{{ projectText(project.name) }}</h3><p>{{ projectText(project.description) }}</p>
 										<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
 										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">Repository <i class="pi pi-arrow-up-right"></i></a>
 									</div>

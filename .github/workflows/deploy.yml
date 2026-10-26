@@ -1,4 +1,4 @@
-name: Zegirdor's Portfolio Build on GitHub Pages or Self-hosted runner, then deploy on both
+name: Zegirdor Portfolio Build and Deploy
 
 on:
   push:
@@ -14,16 +14,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-on-github:
-    name: Build on GitHub
+  build-on-homeserver:
+    name: Build on Home server
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install Node JS
+      - name: Install Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -31,44 +30,72 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - name: Check PrimeUI license is available
+      - name: Check required build settings
+        shell: bash
+        env:
+          PGHOST: ${{ secrets.PGHOST }}
+          PGPORT: ${{ secrets.PGPORT }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          VITE_PRIMEUI_LICENSE: ${{ secrets.VITE_PRIMEUI_LICENSE }}
         run: |
-          if [ -z "$VITE_PRIMEUI_LICENSE" ]; then
-            echo "PrimeUI license variable is empty"
-            exit 1
-          fi
-          echo "PrimeUI license variable is set"
+          for name in PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD VITE_PRIMEUI_LICENSE; do
+            if [ -z "${!name}" ]; then
+              echo "Required GitHub secret $name is not configured"
+              exit 1
+            fi
+          done
+
+      - name: Export database data and screenshots
+        run: node --env-file-if-exists=.env.local scripts/export-projects.js
+        env:
+          PGHOST: ${{ secrets.PGHOST }}
+          PGPORT: ${{ secrets.PGPORT }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+
+      # Share the current export before building, so GitHub can rebuild it
+      # without connecting to the private database or reading the SDB mount.
+      - name: Upload exported assets for the fallback build
+        uses: actions/upload-artifact@v7
+        with:
+          name: zegirdor-portfolio-exported-assets
+          path: public/
+          if-no-files-found: error
+
+      - name: Build site from exported assets
+        run: npm exec -- vite build --base=./
         env:
           VITE_PRIMEUI_LICENSE: ${{ secrets.VITE_PRIMEUI_LICENSE }}
 
-      - name: Build Node project
-        run: npm run build -- --base=./
-        env:
-          VITE_PRIMEUI_LICENSE: ${{ secrets.VITE_PRIMEUI_LICENSE }}
-
-      - name: Upload artifact for Pages
+      - name: Upload artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v5
         with:
           name: zegirdor-portfolio-pages-artifact
           path: dist/
 
-      - name: Upload artifact for serf-hosted runners
+      - name: Upload artifact for the home server
         uses: actions/upload-artifact@v7
         with:
           name: zegirdor-portfolio-homeserver-artifact
           path: dist/
           if-no-files-found: error
 
-  build-on-homeserver:
-    name: Build on Home server
-    runs-on: self-hosted
-    needs: build-on-github
-    if: failure() && needs.build-on-github.result == 'failure' && github.ref == 'refs/heads/main'
+  build-on-github:
+    name: Build on GitHub (fallback)
+    needs: build-on-homeserver
+    if: >-
+      failure() &&
+      needs.build-on-homeserver.result == 'failure' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v7
 
-      - name: Install Node JS
+      - name: Install Node.js
         uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -76,28 +103,26 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - name: Check PrimeUI license is available
-        run: |
-          if [ -z "$VITE_PRIMEUI_LICENSE" ]; then
-            echo "PrimeUI license variable is empty"
-            exit 1
-          fi
-          echo "PrimeUI license variable is set"
+      # A missing snapshot fails this job. Do not deploy the checked-in
+      # placeholder JSON when the server export did not succeed.
+      - name: Download the exported database data and screenshots
+        uses: actions/download-artifact@v8
+        with:
+          name: zegirdor-portfolio-exported-assets
+          path: public/
+
+      - name: Build site from exported assets
+        run: npm exec -- vite build --base=./
         env:
           VITE_PRIMEUI_LICENSE: ${{ secrets.VITE_PRIMEUI_LICENSE }}
 
-      - name: Build Node project
-        run: npm run build -- --base=./
-        env:
-          VITE_PRIMEUI_LICENSE: ${{ secrets.VITE_PRIMEUI_LICENSE }}
-
-      - name: Upload artifact for Pages
+      - name: Upload fallback artifact for GitHub Pages
         uses: actions/upload-pages-artifact@v5
         with:
           name: zegirdor-portfolio-pages-artifact-fallback
           path: dist/
 
-      - name: Upload artifact for serf-hosted runners
+      - name: Upload fallback artifact for the home server
         uses: actions/upload-artifact@v7
         with:
           name: zegirdor-portfolio-homeserver-artifact-fallback
@@ -106,9 +131,12 @@ jobs:
 
   deploy-to-github-pages:
     name: Deploy to GitHub Pages
-    needs: [build-on-github, build-on-homeserver]
+    needs: [build-on-homeserver, build-on-github]
     if: >-
-      always() && (needs.build-on-github.result == 'success' || needs.build-on-homeserver.result == 'success') && github.ref == 'refs/heads/main'
+      !cancelled() &&
+      github.ref == 'refs/heads/main' &&
+      (needs.build-on-homeserver.result == 'success' ||
+       needs.build-on-github.result == 'success')
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -118,23 +146,26 @@ jobs:
       pages: write
       id-token: write
     steps:
-      - name: Github Pages deploy
+      - name: Deploy Pages artifact
         id: deployment
         uses: actions/deploy-pages@v5
         with:
-          artifact_name: ${{ needs.build-on-github.result == 'success' && 'zegirdor-portfolio-pages-artifact' || 'zegirdor-portfolio-pages-artifact-fallback' }}
-  
+          artifact_name: ${{ needs.build-on-homeserver.result == 'success' && 'zegirdor-portfolio-pages-artifact' || 'zegirdor-portfolio-pages-artifact-fallback' }}
+
   deploy-to-homeserver:
     name: Deploy to Home server
-    needs: [build-on-github, build-on-homeserver]
+    needs: [build-on-homeserver, build-on-github]
     if: >-
-      always() && (needs.build-on-github.result == 'success' || needs.build-on-homeserver.result == 'success') && github.ref == 'refs/heads/main'
+      !cancelled() &&
+      github.ref == 'refs/heads/main' &&
+      (needs.build-on-homeserver.result == 'success' ||
+       needs.build-on-github.result == 'success')
     runs-on: self-hosted
     steps:
-      - name: Download regular artifacts
+      - name: Download build artifact
         uses: actions/download-artifact@v8
         with:
-          name: ${{ needs.build-on-github.result == 'success' && 'zegirdor-portfolio-homeserver-artifact' || 'zegirdor-portfolio-homeserver-artifact-fallback' }}
+          name: ${{ needs.build-on-homeserver.result == 'success' && 'zegirdor-portfolio-homeserver-artifact' || 'zegirdor-portfolio-homeserver-artifact-fallback' }}
           path: dist/
 
       - name: Publish site to Nginx directory
