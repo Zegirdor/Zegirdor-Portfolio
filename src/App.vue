@@ -242,7 +242,7 @@ onMounted(async () => {
 									<div class="project-list-copy">
 										<h3>{{ projectText(project.name) }}</h3><p>{{ projectText(project.description) }}</p>
 										<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
-										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">Repository <i class="pi pi-arrow-up-right"></i></a>
+										<a :href="project.repositoryUrl" target="_blank" rel="noopener noreferrer">{{ i18n('projects.repository') }}&nbsp;<i class="pi pi-arrow-up-right"></i></a>
 									</div>
 								</template>
 							</Card>
