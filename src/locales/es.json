@@ -29,7 +29,7 @@
         "title_1": "Proyectos seleccionados",
         "title_2": "Proyectos",
         "missing_projects": "Todavía no hay proyectos seleccionados. Esta página está en construcción.",
-        "missing_database": "Los datos de los proyectos aparecerán aquí después de que se configure una base de datos.",
+        "missing_database": "Los datos de los proyectos no están disponibles en este momento. Por favor vuelve en un rato más.",
         "layout_label": "Presentación de proyectos",
         "grid_view": "Vista de cuadrícula",
         "list_view": "Vista de lista",

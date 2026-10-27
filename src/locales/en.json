@@ -29,7 +29,7 @@
         "title_1": "Selected work",
         "title_2": "Projects",
         "missing_projects": "No selected projects yet. Page under construction.",
-        "missing_database": "Project data will appear here after the database build step is configured.",
+        "missing_database": "Project data is currently unavailable. Please try again in a while.",
         "layout_label": "Project layout",
         "grid_view": "Grid view",
         "list_view": "List view",

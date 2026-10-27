@@ -1,7 +1,7 @@
 # Pending Tasks
 
-- [ ] Localize or remove the English text/title/description embedded in public/images/default-project.svg (image work deferred by the user)
-- [ ] Update project-loading error messages now that the database export is configured
+- [x] Localize or remove the English text/title/description embedded in public/images/default-project.svg (image work deferred by the user)
+- [x] Update project-loading error messages now that the database export is configured
 - [ ] Add a Matrix theme
 - [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
