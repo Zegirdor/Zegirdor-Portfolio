@@ -59,7 +59,7 @@ function projectText(value) {
 function projectImageUrl(project) {
 	return project.screenshotUrl
 		? baseUrl + project.screenshotUrl
-		: baseUrl + 'images/default-project.svg'
+		: baseUrl + 'images/default-project-image.svg'
 }
 
 function getLanguageOption(code) {

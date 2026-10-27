@@ -54,7 +54,7 @@ try {
 		: '/mnt/hdd320_1/assets/zegirdor-portfolio/default-project-image.svg'
 
 	const defaultScreenshotDestination = path.join(
-		projectRoot, 'public', 'images', 'default-project.svg'
+		projectRoot, 'public', 'images', 'default-project-image.svg'
 	)
 
 	await mkdir(path.dirname(defaultScreenshotDestination), { recursive: true })
