@@ -38,7 +38,7 @@ Values
 	E'{"es": "Una página web creada para funcionar como una invitación para mi boda. La desarrollé en NodeJS, usando Vite como la herramienta de ensamblado, y Tailwind como biblioteca para los componentes.", "en": "A Web based invitation card used at my wedding. I built it using NodeJS with Vite as the build tool, and Tailwind as the component\'s library."}',
 	'https://github.com/Zegirdor/wedding-invitation',
 	'https://wedding.zegirdordev.com/',
-	'/mnt/hdd320_1/assets/wedding-invitation/Wedding Invitation Screenshot 1.png', /* Example path */
+	'/mnt/hdd320_1/assets/zegirdor-portfolio/Wedding Invitation Screenshot 1.png', /* Example path */
 	'1.0.2',
 	'2026/08/02'::Date,
 	Array['Luis Ángel Moreno']::Text[],
@@ -47,6 +47,8 @@ Values
 	0
 )
 On Conflict (Git_Repository_URL) Do Update Set Name = Excluded.Name, Description = Excluded.Description, Demo_URL = Excluded.Demo_URL, Screenshot_Path = Excluded.Screenshot_Path, Version = Excluded.Version, Project_Date = Excluded.Project_Date, Authors = Excluded.Authors, Completion_Percent = Excluded.Completion_Percent, Is_Visible = Excluded.Is_Visible, Display_Order = Excluded.Display_Order;
+
+/* Default image: default-project-image.svg */
 
 With Tech_References(Repo_Name_EN, Tech_Name) As (
     Values

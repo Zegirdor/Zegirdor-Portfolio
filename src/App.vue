@@ -1,4 +1,5 @@
 <script setup>
+import { usePrimeVue } from 'primevue/config'
 import { computed, onMounted, ref, watch } from 'vue'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
@@ -47,6 +48,8 @@ const visibleProjects = computed(() => {
 const { t: i18n, locale } = useI18n();
 const baseUrl = import.meta.env.BASE_URL
 
+const primevue = usePrimeVue()
+
 function projectText(value) {
 	if (typeof value === 'string') return value
 	if (!value || typeof value !== 'object') return ''
@@ -88,6 +91,15 @@ watch(selectedTheme, (themeName) => {
 // Apply the saved language and keep Vue I18n and Local Storage in sync.
 watch(selectedLanguage, (languageCode) => {
 	locale.value = languageCode
+	document.documentElement.lang = languageCode === 'wd' ? 'en' : languageCode
+	document.title = i18n('meta.title')
+	Object.assign(primevue.config.locale, {
+		selectionMessage: i18n('primevue.selection_message', { count: '{0}' }),
+		emptySelectionMessage: i18n('primevue.empty_selection'),
+		emptyMessage: i18n('primevue.empty_options')
+	})
+
+	document.querySelector('meta[name="description"]')?.setAttribute('content', i18n('meta.description'))
 	document.documentElement.classList.toggle('locale-wd', languageCode === 'wd')
 	if (languageCode !== 'wd') {
 		localStorage.setItem('zegirdor-portfolio-language', languageCode)
@@ -122,12 +134,12 @@ onMounted(async () => {
 <template>
 	<div class="site-shell">
 		<header class="site-header">
-			<Toolbar class="site-toolbar" aria-label="Main navigation">
+			<Toolbar class="site-toolbar" :aria-label="i18n('accessibility.main_navigation')">
 				<template #start>
-					<a class="brand" href="#home" aria-label="ZegirdorDev home" v-html="i18n('navigation.presentation')"></a>
+					<a class="brand" href="#home" :aria-label="i18n('accessibility.home')" v-html="i18n('navigation.presentation')"></a>
 				</template>
 				<template #center>
-					<nav class="main-nav" aria-label="Main sections">
+					<nav class="main-nav" :aria-label="i18n('accessibility.main_sections')">
 						<a href="#projects" v-html="i18n('navigation.projects')"></a>
 						<a href="#about" v-html="i18n('navigation.about')"></a>
 						<a href="#contact" v-html="i18n('navigation.contact')"></a>
@@ -135,7 +147,7 @@ onMounted(async () => {
 				</template>
 				<template #end>
 					<div class="toolbar-preferences">
-						<Select v-ripple v-model="selectedLanguage" :options="languageOptions" option-label="name" option-value="code" aria-label="Choose language" class="language-select">
+						<Select v-ripple v-model="selectedLanguage" :options="languageOptions" option-label="name" option-value="code" :aria-label="i18n('preferences.choose_language')" class="language-select">
 							<template #option="{ option }">
 								<span class="language-option">
 									<img class="language-flag" :src="option.flag" alt="" aria-hidden="true" />
@@ -150,7 +162,7 @@ onMounted(async () => {
 							</template>
 						</Select>
 
-						<Select v-ripple v-model="selectedTheme" :options="themes" option-label="theme" option-value="theme" aria-label="Choose theme" class="capitalize-text">
+						<Select v-ripple v-model="selectedTheme" :options="themes" option-label="theme" option-value="theme" :aria-label="i18n('preferences.choose_theme')" class="capitalize-text">
 							<template #option="{ option }">
 								<i :class="option.icon" aria-hidden="true"></i>
 								<span class="capitalize-text">&nbsp;{{ i18n(`themes.${option.theme}`) }}</span>
@@ -181,13 +193,13 @@ onMounted(async () => {
 			<section id="projects" class="projects-section section-wrap">
 				<div class="section-heading">
 					<div><p class="eyebrow" v-html="i18n('projects_section.title_1')"></p><h2 v-html="i18n('projects_section.title_2')"></h2></div>
-					<div class="view-switch" aria-label="Project layout">
-						<Button v-ripple icon="pi pi-th-large" :outlined="layout !== 'grid'" aria-label="Grid view" @click="layout = 'grid'" />
-						<Button v-ripple icon="pi pi-list" :outlined="layout !== 'list'" aria-label="List view" @click="layout = 'list'" />
+					<div class="view-switch" :aria-label="i18n('projects_section.layout_label')">
+						<Button v-ripple icon="pi pi-th-large" :outlined="layout !== 'grid'" :aria-label="i18n('projects_section.grid_view')" @click="layout = 'grid'" />
+						<Button v-ripple icon="pi pi-list" :outlined="layout !== 'list'" :aria-label="i18n('projects_section.list_view')" @click="layout = 'list'" />
 					</div>
 				</div>
 
-				<div v-if="technologyOptions.length" class="technology-filters" aria-label="Filter projects by technology">
+				<div v-if="technologyOptions.length" class="technology-filters" :aria-label="i18n('projects_section.filter_label')">
 					<button
 						v-for="technology in technologyOptions"
 						:key="technology"
@@ -195,10 +207,10 @@ onMounted(async () => {
 						:aria-pressed="selectedTechnologies.includes(technology)"
 						@click="toggleTechnology(technology)"
 					><Chip :label="technology" /></button>
-					<Button v-if="selectedTechnologies.length" label="Clear filters" text size="small" @click="selectedTechnologies = []" />
+					<Button v-if="selectedTechnologies.length" :label="i18n('projects_section.clear_filters')" text size="small" @click="selectedTechnologies = []" />
 				</div>
 
-				<div v-if="loading" class="project-grid" aria-label="Loading projects">
+				<div v-if="loading" class="project-grid" :aria-label="i18n('projects_section.loading')">
 					<Card v-for="item in 3" :key="item" class="project-card">
 						<template #content>
 							<Skeleton class="project-skeleton-image" />
@@ -215,7 +227,7 @@ onMounted(async () => {
 						<div class="project-grid">
 							<Card v-for="project in items" :key="project.id" class="project-card">
 								<template #header>
-									<img class="project-image" :src="projectImageUrl(project)" :alt="projectText(project.name) + ' screenshot'" loading="lazy" />
+									<img class="project-image" :src="projectImageUrl(project)" :alt="i18n('projects.screenshot_alt', { name: projectText(project.name) || i18n('projects.unnamed_project') })" loading="lazy" />
 								</template>
 								<template #title>{{ projectText(project.name) }}</template>
 								<template #subtitle>
@@ -228,7 +240,7 @@ onMounted(async () => {
 									<div class="project-tags"><Chip v-for="technology in project.technologies" :key="technology" :label="technology" /></div>
 									<div v-if="project.completion != null" class="project-progress">
 										<span>{{ i18n(project.completion === 100 ? 'projects.complete' : 'projects.in_progress') }}</span>
-										<ProgressSpinner :value="project.completion" :pt="{ root: { 'aria-label': `${project.completion}% complete` } }" />
+										<ProgressSpinner :value="project.completion" :pt="{ root: { 'aria-label': i18n('projects.completion_label', {percentage: project.completion}) } }" />
 									</div>
 								</template>
 								<template #footer>
@@ -245,10 +257,10 @@ onMounted(async () => {
 							<Card v-for="project in items" :key="project.id" class="project-card project-card-list">
 								<template #content>
 									<div class="project-list-media">
-										<img class="project-image" :src="projectImageUrl(project)" :alt="projectText(project.name) + ' screenshot'" loading="lazy" />
+										<img class="project-image" :src="projectImageUrl(project)" :alt="i18n('projects.screenshot_alt', { name: projectText(project.name) || i18n('projects.unnamed_project') })" loading="lazy" />
 										<div v-if="project.completion != null" class="project-progress">
 											<span>{{ i18n(project.completion === 100 ? 'projects.complete' : 'projects.in_progress') }}</span>
-											<ProgressSpinner :value="project.completion" :pt="{ root: { 'aria-label': `${project.completion}% complete` } }" />
+											<ProgressSpinner :value="project.completion" :pt="{ root: { 'aria-label': i18n('projects.completion_label', {percentage: project.completion}) } }" />
 										</div>
 									</div>
 									
@@ -278,7 +290,7 @@ onMounted(async () => {
 				<div><p class="eyebrow" v-html="i18n('about_section.title_1')"></p><h2 v-html="i18n('about_section.title_2')"></h2></div>
 				<div class="about-copy">
 					<p v-html="i18n('about_section.info_1')"></p>
-					<MeterGroup :value="[]" aria-label="Skills summary" />
+					<MeterGroup :value="[]" :aria-label="i18n('about_section.skills_summary')" />
 				</div>
 			</section>
 

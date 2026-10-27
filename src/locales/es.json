@@ -1,4 +1,13 @@
 {
+    "primevue": {
+        "selection_message": "Elementos seleccionados: {count}",
+        "empty_selection": "Ningún elemento seleccionado",
+        "empty_options": "No hay opciones disponibles"
+    },
+    "meta": {
+        "title": "Portafolio de ZegirdorDev",
+        "description": "Repositorio de proyectos y trabajos de Zegirdor, arquitecto de software."
+    },
     "navigation": {
         "presentation": "Zegirdor<span>Dev</span>&nbsp;-&nbsp;Arquitecto&nbsp;de&nbsp;Software",
         "projects": "Proyectos",
@@ -20,7 +29,13 @@
         "title_1": "Proyectos seleccionados",
         "title_2": "Proyectos",
         "missing_projects": "Todavía no hay proyectos seleccionados. Esta página está en construcción.",
-        "missing_database": "Los datos de los proyectos aparecerán aquí después de que se configure una base de datos."
+        "missing_database": "Los datos de los proyectos aparecerán aquí después de que se configure una base de datos.",
+        "layout_label": "Presentación de proyectos",
+        "grid_view": "Vista de cuadrícula",
+        "list_view": "Vista de lista",
+        "filter_label": "Filtrar proyectos por tecnología",
+        "clear_filters": "Quitar filtros",
+        "loading": "Cargando..."
     },
     "projects": {
         "version": "Versión",
@@ -29,12 +44,16 @@
         "repository": "Repositorio de GitHub",
         "view_demo": "Ver proyecto",
         "continue_to_demo": "Continuar al sitio",
-        "open_full_tab_dialogue": "Abrir la demo completa del proyecto en una nueva pestaña?"
+        "open_full_tab_dialogue": "Abrir la demo completa del proyecto en una nueva pestaña?",
+        "screenshot_alt": "Captura de pantalla de {name}",
+        "completion_label": "{percentage}% completado",
+        "unnamed_project": "este proyecto"
     },
     "about_section": {
         "title_1": "Algo sobre mi",
         "title_2": "Proactivo, planeador, y buen aprendiz.",
-        "info_1": "Soy un desarrollador a quien le apasiona crear aplicaciones centradas en las necesidades de los usuarios. Trabajo principalmente con JavaScript, Node.js, Vue.js, Java con Spring y tecnologías de desarrollo frontend. Tengo experiencia en el desarrollo de APIs y aplicaciones conectadas a bases de datos. También administro servidores Linux, y estoy aprendiendo el alojamiento de servicios en servidores propios y la automatización de despliegues con entrega continua (CI/CD), mientras continúo ampliando mis conocimientos en desarrollo backend e ingeniería de software."
+        "info_1": "Soy un arquitecto de software a quien le apasiona crear aplicaciones centradas en las necesidades de los usuarios. Trabajo principalmente con JavaScript, Node.js, Vue.js, Java con Spring y tecnologías de desarrollo frontend. Tengo experiencia en el desarrollo de APIs y aplicaciones conectadas a bases de datos. También administro servidores Linux, y estoy aprendiendo el alojamiento de servicios en servidores propios y la automatización de despliegues con entrega continua (CI/CD), mientras continúo ampliando mis conocimientos en desarrollo backend e ingeniería de software.",
+        "skills_summary": "Sobre mis habilidades"
     },
     "contact_section": {
         "title_1": "Contáctame",
@@ -43,5 +62,14 @@
     },
     "footer": {
         "title_2": "Sitio desarrollado con Node.JS, Vue, Vite y PrimeVue"
+    },
+    "accessibility": {
+        "main_navigation": "Navegación principal",
+        "home": "ZegirdorDev - Inicio",
+        "main_sections": "Secciones"
+    },
+    "preferences": {
+        "choose_language": "Idioma",
+        "choose_theme": "Tema del sitio"
     }
 }

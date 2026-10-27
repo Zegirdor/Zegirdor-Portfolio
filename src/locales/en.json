@@ -1,4 +1,13 @@
 {
+    "primevue": {
+        "selection_message": "Selected items: {count}",
+        "empty_selection": "No selected item",
+        "empty_options": "No available options"
+    },
+    "meta": {
+        "title": "ZegirdorDev's portfolio",
+        "description": "Selected projects and work by Zegirdor, software architect."
+    },
     "navigation": {
         "presentation": "Zegirdor<span>Dev</span>&nbsp;-&nbsp;Software&nbsp;Architect",
         "projects": "Projects",
@@ -20,7 +29,13 @@
         "title_1": "Selected work",
         "title_2": "Projects",
         "missing_projects": "No selected projects yet. Page under construction.",
-        "missing_database": "Project data will appear here after the database build step is configured."
+        "missing_database": "Project data will appear here after the database build step is configured.",
+        "layout_label": "Project layout",
+        "grid_view": "Grid view",
+        "list_view": "List view",
+        "filter_label": "Filter projects by technology",
+        "clear_filters": "Clear filters",
+        "loading": "Loading projects"
     },
     "projects": {
         "version": "Version",
@@ -29,12 +44,16 @@
         "repository": "GitHub Repository",
         "view_demo": "View demo",
         "continue_to_demo": "Continue to demo",
-        "open_full_tab_dialogue": "Open the full project demo in a new tab?"
+        "open_full_tab_dialogue": "Open the full project demo in a new tab?",
+        "screenshot_alt": "Screenshot of {name}",
+        "completion_label": "{percentage}% complete",
+        "unnamed_project": "this project"
     },
     "about_section": {
         "title_1": "A little about me",
         "title_2": "Curiosity, craft, and continuous learning.",
-        "info_1": "I’m a developer passionate about building practical, user-focused web applications. I work primarily with JavaScript, Node.js, Vue.js, Java + Spring and modern frontend technologies, with experience in API development and database-driven applications. I also administer Linux servers and am learning self-hosting and deployment automation with continuous integration and delivery (CI/CD) while expanding my skills in backend development and software engineering."
+        "info_1": "I’m a software architect, passionate about building practical, user-focused web applications. I work primarily with JavaScript, Node.js, Vue.js, Java + Spring and modern frontend technologies, with experience in API development and database-driven applications. I also administer Linux servers and am learning self-hosting and deployment automation with continuous integration and delivery (CI/CD) while expanding my skills in backend development and software engineering.",
+        "skills_summary": "Skills summary"
     },
     "contact_section": {
         "title_1": "Get in touch",
@@ -43,5 +62,14 @@
     },
     "footer": {
         "title_2": "Built with Node.JS, Vue, Vite and PrimeVue"
+    },
+    "accessibility": {
+        "main_navigation": "Main navigation",
+        "home": "ZegirdorDev home",
+        "main_sections": "Main sections"
+    },
+    "preferences": {
+        "choose_language": "Choose language",
+        "choose_theme": "Choose theme"
     }
 }

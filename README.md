@@ -8,7 +8,7 @@ A responsive, single-page portfolio built with Vue 3, Vite, and PrimeVue. Postgr
 - Technology filters that match all selected technologies.
 - Demo confirmation through a Popover, keyboard focus trapping, Ripple feedback, and loading skeletons.
 - Optional completion percentages, labeled Complete at 100% and In progress below 100%, with translated labels. In list view, progress appears below the screenshot.
-- English and Spanish interface translations through Vue I18n, sharing one URL. Some interface/accessibility strings and document metadata still need localization.
+- English and Spanish interface and accessibility translations through Vue I18n, sharing one URL. Navigation, selectors, project controls, screenshot descriptions, and completion announcements use locale messages; the user manually checked the translations.
 - A toolbar language selector with flags and a theme selector with icons; each has custom dropdown and selected-value templates.
 - Light and Dark themes with semantic PrimeVue colors. Matrix is selectable, but its distinct styling remains pending.
 - About content and contact links. The skills MeterGroup has no data yet; there is no contact submission form.
@@ -144,6 +144,16 @@ The theme watcher applies the matching `theme-*` class to `<html>`. Aura uses `.
 
 **WD Ghaster** is an optional novelty locale (`wd`) that reuses English messages through `wd: en`; it has no separate JSON file. Selecting it applies `.locale-wd` and the Wingdings font registered in `src/style.css` from `src/assets/fonts/wingding.woff` (or an installed Wingdings font). The language selector remains readable, and PrimeIcons retain their own font. WD is not saved over the normal language preference, so refreshing restores the saved English/Spanish choice.
 
+### Localization details
+
+The locale files include accessibility labels under accessibility, selector labels under preferences, control/loading text under projects_section, and parameterized screenshot/completion text under projects. The screenshot description uses {name} with a translated unnamed-project fallback; completion announcements use {percentage}.
+
+The immediate language watcher also reads meta.title and meta.description to update the browser title and description, and sets html.lang to the selected language (wd uses en). The initial values in index.html remain English by choice and are replaced once JavaScript runs.
+
+PrimeVue's selector announcements use the primevue messages in the same JSON files. usePrimeVue() supplies the configuration, and the language watcher updates selectionMessage, emptySelectionMessage, and emptyMessage using Object.assign. Vue I18n's {count} receives the literal {0} so PrimeVue can substitute the selected-item count afterward. This keeps the current selectors' internal messages synchronized with the page.
+
+The interface translation work has been manually verified by the owner. English text embedded in public/images/default-project.svg is deferred as a separate image task. Rewording the already-translated project-loading error message also remains pending.
+
 ## Exported project format
 
 The generated JSON contains an array with these fields:
@@ -197,7 +207,7 @@ Workflow concurrency uses the shared group `zegirdor-portfolio-deploy` with `can
 - An existing Nginx site configuration pointing to that document root; the workflow publishes static files and does not install or reload Nginx configuration.
 - GitHub Pages configured to deploy through GitHub Actions.
 
-The project owner has confirmed a successful home-server build. Live screenshot HTTP 200 after the permission fix, GitHub Pages rendering, and execution of the fallback path have not yet been confirmed in this session.
+The project owner has confirmed successful local/home-server builds, live screenshot HTTP 200 and GitHub Pages data/image checks for the previous release. The current interface translations have been manually checked. Execution of the GitHub fallback path remains unverified.
 
 ## License
 

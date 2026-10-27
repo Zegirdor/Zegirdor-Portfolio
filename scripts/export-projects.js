@@ -48,6 +48,19 @@ try {
 	const { rows } = await pool.query(sql)
 	const projects = []
 
+	// Export the shared default image once, using the local override when configured.
+	const defaultScreenshotSource = process.env.PORTFOLIO_SCREENSHOT_DIR
+		? path.resolve(projectRoot, process.env.PORTFOLIO_SCREENSHOT_DIR, 'default-project-image.svg')
+		: '/mnt/hdd320_1/assets/zegirdor-portfolio/default-project-image.svg'
+
+	const defaultScreenshotDestination = path.join(
+		projectRoot, 'public', 'images', 'default-project.svg'
+	)
+
+	await mkdir(path.dirname(defaultScreenshotDestination), { recursive: true })
+	await copyFile(defaultScreenshotSource, defaultScreenshotDestination)
+	await chmod(defaultScreenshotDestination, 0o644)
+
 	for (const row of rows) {
 		let screenshotUrl = null
 

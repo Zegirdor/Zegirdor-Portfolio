@@ -1,6 +1,6 @@
 # Pending Tasks
 
-- [ ] Translate remaining hard-coded interface text and accessibility labels (filters, layout/selector labels, screenshot descriptions, and completion announcements)
+- [ ] Localize or remove the English text/title/description embedded in public/images/default-project.svg (image work deferred by the user)
 - [ ] Update project-loading error messages now that the database export is configured
 - [ ] Add a Matrix theme
 - [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
@@ -10,9 +10,15 @@
 - [ ] Preserve the original filesystem error details when screenshot copying fails
 - [ ] Change screenshot retrieval so an unreadable configured source uses the default screenshot instead of aborting the build
 - [ ] Confirm WD font rendering and language-selector readability in the browser
+- [ ] Get rid of the HelloWorld.vue file.
 
 # Completed Tasks
 
+- [x] Translate the remaining active interface text and accessibility labels (navigation, selectors, layouts, filters, loading, screenshot descriptions, and completion announcements)
+- [x] Add translated screenshot-name fallback and parameterized completion announcements in both layouts
+- [x] Update page title, description, and html.lang when the selected language changes; retain initial English HTML defaults by choice
+- [x] Synchronize PrimeVue selector selection/empty messages with the selected language
+- [x] Manually verify the interface translations (confirmed by the user; embedded image text deferred)
 - [x] Update PrimeVue to latest (licensed under latest version)
 - [x] Confirm the PrimeUI license notice is gone with the PrimeVue 4 migration
 - [x] Persist the selected theme in Local Storage

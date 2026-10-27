@@ -11,7 +11,7 @@ This file records the technologies and PrimeVue components used by the portfolio
 | PrimeVue | [PrimeVue installation](https://primevue.dev/installation/) | UI component library. The current package manifest declares PrimeVue 5. |
 | Aura theme | [Styled theming](https://primevue.dev/theming/styled/) | Design-token preset configured with `darkModeSelector: '.theme-dark'`. Page CSS uses semantic color tokens; the user confirmed Light and Dark work. Matrix is selectable but its distinct palette remains pending. |
 | PrimeIcons | [PrimeIcons](https://primevue.dev/icons/) | Navigation, view controls, theme icons, and external-link icons. |
-| Vue I18n | [Vue I18n guide](https://vue-i18n.intlify.dev/guide/) | Composition API translations from `src/locales/en.json` and `src/locales/es.json`. Spanish is the initial default; both languages currently share one URL. |
+| Vue I18n | [Vue I18n guide](https://vue-i18n.intlify.dev/guide/) | English/Spanish interface and accessibility translations, interpolated screenshot/completion descriptions, and page metadata. WD reuses English through wd: en. The user manually checked the translations. |
 | Node.js 24 | [Node.js CLI](https://nodejs.org/docs/latest-v24.x/api/cli.html) | Executes the database/image exporter before the frontend build. `--env-file-if-exists=.env.local` loads local settings when the file exists. |
 | node-postgres (`pg`) | [Connections](https://node-postgres.com/features/connecting) | Build dependency that reads PostgreSQL connection settings from `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, and `PGPASSWORD`. |
 
@@ -20,15 +20,25 @@ This file records the technologies and PrimeVue components used by the portfolio
 | Component | Documentation | Use in this project |
 |---|---|---|
 | DataView | [Sorting example](https://primevue.dev/dataview/#sorting) | Project listing with grid/list selection. `App.vue` fetches the generated `data/projects.json` on mount and filters projects by all selected technologies. |
-| Card | [Advanced example](https://primevue.dev/card/#advanced) | Project containers. Grid cards show the screenshot, localized name/description, version/date, technology chips, completion indicator, and repository/demo actions. List cards currently show the image, name, description, technologies, and repository link. |
+| Card | [Advanced example](https://primevue.dev/card/#advanced) | Both grid and list cards show screenshots, localized names/descriptions, version/date, technology tags, progress, and repository/demo actions. In list view, project-list-media groups the screenshot with progress below it; project-actions aligns the action row. |
 | Toolbar | [Toolbar](https://primevue.dev/toolbar/) | Header containing the brand, section links, language selector, and theme selector. |
 | Select | [Select](https://primevue.dev/select/) | Theme and language selection. Custom `#option` and `#value` slots display icons or flags for both the menu and selected value. |
 
 Theme choices are Light, Dark, and Matrix. A watcher applies the matching `theme-*` class to `<html>` and saves the name under `zegirdor-portfolio-theme`. The `.capitalize-text` class only affects displayed capitalization.
 
-The language selector uses the PNG flags in `src/assets/locale_flags/`, changes Vue I18n's locale, and persists a validated `en`/`es` choice under `zegirdor-portfolio-language`. Project names and descriptions are language-keyed JSONB objects; `projectText()` uses the selected locale, then English as a fallback, and also accepts plain strings.
+The language selector uses PNG flags in src/assets/locale_flags/ and offers es, en, and WD Ghaster (wd). It changes Vue I18n's locale and persists normal en/es choices under zegirdor-portfolio-language. WD toggles locale-wd without overwriting the saved normal language. Project names/descriptions remain language-keyed JSONB; projectText() selects the active locale, falls back to English, and accepts plain strings.
 
-Project version/status labels, repository/demo actions, and the demo-confirmation text now use locale messages. Component props bind expressions, for example `:label="i18n('projects.view_demo')"`. Some interface and accessibility strings still need translation. Fixed markup in local locale messages uses `v-html`; project names and descriptions render as text.
+The active page's controls and accessibility labels use locale messages: navigation/section labels, language/theme selectors, grid/list controls, technology filtering, loading, project actions, skill-summary labeling, and demo confirmation. Screenshot descriptions interpolate {name} with a translated unnamed-project fallback; completion labels interpolate {percentage}. Props bind expressions such as :label="i18n('projects.view_demo')". Fixed markup in trusted local messages uses v-html; project names/descriptions render as text.
+
+## Localization and accessibility
+
+- Locale messages are organized under the existing content sections plus accessibility, preferences, meta, and primevue in en.json/es.json. Language names and product/technology names remain recognizable proper names.
+- The immediate language watcher updates Vue I18n, document.title, the description meta tag, and html.lang (wd maps to en because its messages are English). index.html intentionally retains its initial English values; the watcher replaces them after JavaScript runs.
+- [PrimeVue locale configuration](https://primevue.dev/configuration/#locale) is accessed using usePrimeVue(). The watcher uses Object.assign(primevue.config.locale, ...) to refresh selectionMessage, emptySelectionMessage, and emptyMessage while preserving other settings.
+- The selection message is stored as {count} in Vue I18n. Passing the literal string {0} as count preserves PrimeVue's placeholder, which the Select then replaces with the selection count. This synchronization runs on initialization and each selected-language change.
+- WD uses the registered src/assets/fonts/wingding.woff font, keeps language-selector text readable, and preserves PrimeIcons. main.js aliases wd to en; there is no duplicate wd.json.
+- The user has manually checked the interface translations. English text, title, and description embedded in public/images/default-project.svg are deferred as separate image work. The placeholder remains unchanged; translated img alt text does not translate words drawn inside the SVG.
+- Rewording the existing translated loading-error message for the now-configured database remains a separate task.
 
 ## Project interactions
 
@@ -45,7 +55,7 @@ Project version/status labels, repository/demo actions, and the demo-confirmatio
 | Component or feature | Documentation | Current use |
 |---|---|---|
 | MeterGroup | [MeterGroup](https://primevue.dev/metergroup/) | The About section currently supplies an empty array. The skills/proficiency display and its metric remain undecided. |
-| ProgressSpinner | [ProgressSpinner](https://primevue.dev/progressspinner/) | Determinate display of the saved completion percentage. The current condition includes every non-null percentage, including 100; the status label still needs to distinguish finished projects. |
+| ProgressSpinner | [ProgressSpinner](https://primevue.dev/progressspinner/) | Determinate completion display in both layouts, with larger percentage text. A null value hides it; exactly 100 uses the translated Complete label, and lower values use In progress. The accessible percentage announcement is also translated. |
 | Contact form | [PrimeVue Forms](https://primevue.dev/forms/) | Deferred. The Contact section currently provides translated contact information and external links. A submission form would need a server endpoint or form service. |
 
 ## PostgreSQL schema and data
@@ -67,7 +77,7 @@ Project version/status labels, repository/demo actions, and the demo-confirmatio
 
 Connection values are plain values in the ignored `.env.local` file for local use. GitHub Actions injects the same five `PG*` settings through repository secrets; secret values contain no assignment prefix or surrounding env-file quotes. Database secrets do not use the `VITE_` prefix.
 
-Windows can query the database on the LAN, but it cannot directly read a Linux `/mnt/...` screenshot path. The full export is currently performed on the Linux home server. A local screenshot mapping or generated-data workflow for Windows remains a possible follow-up.
+Windows builds can read PostgreSQL over the LAN and use PORTFOLIO_SCREENSHOT_DIR=special_folder/project_screenshots for local image copies named by ID and the database path's extension. The override is resolved relative to the project root unless absolute; without it, the exporter uses database filesystem paths. The user confirmed local build/preview works. The corrected special_folder/ ignore rule excludes local sources; generated public/ copies are published. npm run dev serves already-exported public/ assets and does not rerun the exporter.
 
 ## Build and deployment
 
@@ -80,4 +90,4 @@ The [deployment workflow](.github/workflows/deploy.yml) runs on pushes to `main`
 
 [GitHub workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts) pass exported assets and built files between jobs.
 
-The user confirmed a successful home-server build. Nginx has served the frontend and project JSON; the screenshot originally returned 403 because its deployed mode was 0660. The 0644 fix is implemented and was pushed. A successful live screenshot response after that fix, GitHub Pages rendering, and execution of the fallback path still require confirmation.
+The user previously confirmed local/home-server builds, screenshot HTTP 200, GitHub Pages data/images, and a committed/pushed release building successfully. Current interface translations were manually checked by the user. The GitHub fallback path has not been explicitly exercised in this session.
