@@ -63,6 +63,7 @@ try {
 
 	for (const row of rows) {
 		let screenshotUrl = null
+		let defaultScreenshotUrl = null
 
 		if (row.screenshotPath) {
 			const extension = path.extname(row.screenshotPath).toLowerCase()
@@ -84,11 +85,17 @@ try {
 				const destination = path.join(screenshotDirectory, screenshotFileName)
 				await copyFile(screenshotSource, destination)
 				await chmod(destination, 0o644)
-			} catch {
-				throw new Error('Could not copy the screenshot for project ID ' + row.id + '. Check its database path and runner read permissions.')
+				
+				screenshotUrl = 'images/project_screenshots/' + screenshotFileName
+			} catch (error) {
+				console.warn(
+					`Using the default screenshot for project ID ${row.id}
+					due to the screenshot not being reachable.
+					Error: ${(error.code ?? error.message ?? "Error retrieving the error message...")}`
+				)
 			}
 
-			screenshotUrl = 'images/project_screenshots/' + screenshotFileName
+			defaultScreenshotUrl = 'images/' + 'default-project-image.svg'
 		}
 
 		projects.push({
