@@ -1,5 +1,9 @@
 <script setup>
 import { usePrimeVue } from 'primevue/config'
+import { usePreset } from '@primeuix/themes'
+import Aura from "@primeuix/themes/aura"
+import Matrix from "./themes/matrix.mjs"
+import MatrixRain from './components/MatrixRain.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import Button from 'primevue/button'
 import Card from 'primevue/card'
@@ -21,7 +25,7 @@ const loading = ref(true)
 const loadError = ref(false)
 const layout = ref('grid')
 const selectedTechnologies = ref([])
-const themes = [{theme: "light", icon: "pi pi-sun"}, {theme : "dark", icon : "pi pi-moon"}, {theme : "matrix", icon : "pi pi-code"}]
+const themes = [{theme: "light", icon: "pi pi-sun", preset: Aura}, {theme : "dark", icon : "pi pi-moon", preset: Aura}, {theme : "matrix", icon : "pi pi-code", preset: Matrix}]
 const selectedTheme = ref(getInitialTheme())
 const languageOptions = [
 	{ code: 'es', name: 'Español', flag: spanishFlag },
@@ -83,6 +87,8 @@ watch(selectedTheme, (themeName) => {
 	// const themeClasses = themes.map((name) => `theme-${name}`)
 	root.classList.remove(...themes.map((themeData) => `theme-${themeData.theme}`))
 	root.classList.add(`theme-${themeName}`)
+	const themeDefinition = themes.find((item) => item.theme === themeName)
+	usePreset(themeDefinition.preset)
 	localStorage.setItem('zegirdor-portfolio-theme', themeName)
 },
 {immediate: true} // Makes the watcher apply changes as soon as it's created so it applies the saved theme upon page load.
@@ -133,6 +139,7 @@ onMounted(async () => {
 
 <template>
 	<div class="site-shell">
+		<MatrixRain v-if="selectedTheme === 'matrix'" />
 		<header class="site-header">
 			<Toolbar class="site-toolbar" :aria-label="i18n('accessibility.main_navigation')">
 				<template #start>

@@ -1,0 +1,14 @@
+@font-face {
+  font-family: 'Wingdings';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Wingdings'), url('assets/fonts/wingding.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'MatrixTerminal';
+	src: url('./assets/fonts/TerminalVision.otf') format('opentype');
+	font-weight: 100;
+	font-style: normal;
+	font-display: swap;
+}

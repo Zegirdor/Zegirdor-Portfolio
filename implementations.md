@@ -9,7 +9,7 @@ This file records the technologies and PrimeVue components used by the portfolio
 | Vue 3 | [Vue guide](https://vuejs.org/guide/introduction.html) | Reactive project listings, technology filters, preferences, and reusable UI components. |
 | Vite | [Vite static deployment](https://vite.dev/guide/static-deploy) | Development server and production bundler. Static output in `dist/` is deployed to GitHub Pages and Nginx with `--base=./`. |
 | PrimeVue | [PrimeVue installation](https://primevue.dev/installation/) | UI component library. The current package manifest declares PrimeVue 5. |
-| Aura theme | [Styled theming](https://primevue.dev/theming/styled/) | Design-token preset configured with `darkModeSelector: '.theme-dark'`. Page CSS uses semantic color tokens; the user confirmed Light and Dark work. Matrix is selectable but its distinct palette remains pending. |
+| Aura and Matrix presets | [Styled theming](https://primevue.dev/theming/styled/) | Aura supplies Light/Dark; src/themes/matrix.mjs extends it for Matrix. Each theme option contains its preset, and the watcher selects it with usePreset() while applying the matching theme-* class. |
 | PrimeIcons | [PrimeIcons](https://primevue.dev/icons/) | Navigation, view controls, theme icons, and external-link icons. |
 | Vue I18n | [Vue I18n guide](https://vue-i18n.intlify.dev/guide/) | English/Spanish interface and accessibility translations, interpolated screenshot/completion descriptions, and page metadata. WD reuses English through wd: en. The user manually checked the translations. |
 | Node.js 24 | [Node.js CLI](https://nodejs.org/docs/latest-v24.x/api/cli.html) | Executes the database/image exporter before the frontend build. `--env-file-if-exists=.env.local` loads local settings when the file exists. |
@@ -24,7 +24,7 @@ This file records the technologies and PrimeVue components used by the portfolio
 | Toolbar | [Toolbar](https://primevue.dev/toolbar/) | Header containing the brand, section links, language selector, and theme selector. |
 | Select | [Select](https://primevue.dev/select/) | Theme and language selection. Custom `#option` and `#value` slots display icons or flags for both the menu and selected value. |
 
-Theme choices are Light, Dark, and Matrix. A watcher applies the matching `theme-*` class to `<html>` and saves the name under `zegirdor-portfolio-theme`. The `.capitalize-text` class only affects displayed capitalization.
+Theme choices are Light, Dark, and Matrix. Each option stores theme, icon, and preset. The immediate watcher finds the selected definition, applies its theme-* class, calls usePreset(themeDefinition.preset), and saves the name under zegirdor-portfolio-theme. Light/Dark share Aura, with .theme-dark controlling Aura's scheme; Matrix supplies its own palette. Adding another custom theme requires its definition/import and styles rather than another theme-specific condition. The .capitalize-text class only affects displayed capitalization.
 
 The language selector uses PNG flags in src/assets/locale_flags/ and offers es, en, and WD Ghaster (wd). It changes Vue I18n's locale and persists normal en/es choices under zegirdor-portfolio-language. WD toggles locale-wd without overwriting the saved normal language. Project names/descriptions remain language-keyed JSONB; projectText() selects the active locale, falls back to English, and accepts plain strings.
 
@@ -36,9 +36,20 @@ The active page's controls and accessibility labels use locale messages: navigat
 - The immediate language watcher updates Vue I18n, document.title, the description meta tag, and html.lang (wd maps to en because its messages are English). index.html intentionally retains its initial English values; the watcher replaces them after JavaScript runs.
 - [PrimeVue locale configuration](https://primevue.dev/configuration/#locale) is accessed using usePrimeVue(). The watcher uses Object.assign(primevue.config.locale, ...) to refresh selectionMessage, emptySelectionMessage, and emptyMessage while preserving other settings.
 - The selection message is stored as {count} in Vue I18n. Passing the literal string {0} as count preserves PrimeVue's placeholder, which the Select then replaces with the selection count. This synchronization runs on initialization and each selected-language change.
-- WD uses the registered src/assets/fonts/wingding.woff font, keeps language-selector text readable, and preserves PrimeIcons. main.js aliases wd to en; there is no duplicate wd.json.
-- The user has manually checked the interface translations. English text, title, and description embedded in public/images/default-project.svg are deferred as separate image work. The placeholder remains unchanged; translated img alt text does not translate words drawn inside the SVG.
-- Rewording the existing translated loading-error message for the now-configured database remains a separate task.
+- src/font.css centralizes @font-face declarations and is imported before style.css in main.js. WD uses assets/fonts/wingding.woff, applies font-size: small to reduce wrapping, keeps language-selector text readable, and preserves PrimeIcons. main.js aliases wd to en; there is no duplicate wd.json.
+- The user manually checked the interface translations. The old English-text placeholder was replaced with the language-neutral default-project-image.svg; the frontend uses its translated img alt text. The static index.html English defaults remain intentionally unchanged.
+- The project-loading error messages now describe unavailable project data, matching the browser's static JSON fetch rather than attributing the failure to PostgreSQL.
+
+## Matrix theme and animated background
+
+- [src/themes/matrix.mjs](src/themes/matrix.mjs) defines the preset using definePreset(Aura, ...). Chosen accent is #1EFF5A, background/contrast is #040805, and foreground is #00FF40. Shared tokens cover content, form fields, overlays, and dropdown option states; component tokens customize Chips and primary text-button hover/pressed backgrounds.
+- The white strip inspected during styling was the empty MeterGroup track, whose background follows content.borderColor. Matrix sets that token to dark green; the skills data itself remains pending.
+- [src/font.css](src/font.css) registers MatrixTerminal from assets/fonts/TerminalVision.otf as OpenType with font-display: swap. :root.theme-matrix applies the terminal stack; .technology-filter uses font-family: inherit so native filter buttons and their Chips follow it.
+- [src/components/MatrixRain.vue](src/components/MatrixRain.vue) renders an aria-hidden fixed canvas. App.vue mounts it inside .site-shell before the header only when selectedTheme === 'matrix'. The component has resize listeners and an animation-frame cleanup callback for unmounting.
+- The rain uses randomized Katakana, Latin letters, and digits with 16px monospace glyphs, a translucent black fade, and green #0F0 drawing. requestAnimationFrame is timestamp-throttled to a maximum target of about 12 drawing updates per second; drops advance once per redraw. This is throttling rather than fully delta-time-integrated movement.
+- Final canvas CSS uses z-index: -1, pointer-events: none, background-color: #040805, and opacity: 0.1. The .theme-matrix .site-shell isolation rule remains. The user removed the experimental section-background transparency block and preferred adjusting rain opacity directly; the screenshot and user report confirm the final appearance is satisfactory.
+- Remaining rain follow-ups include reduced-motion handling, resize/drop-coordinate review and high-DPI rendering, plus explicit checks of repeated theme switching and cleanup. A feature-branch push/deployment-trigger check is still pending.
+- The WD Ghaster icon's currentColor alpha-mask approach is deferred. Both Select-slot replacements and the CSS are saved in special_folder/Unused Snippets/snippets.js; the earlier rain reference remains in special_folder/Unused Snippets/matrix-rain-reference.vue. These local references are ignored by Git.
 
 ## Project interactions
 
@@ -71,9 +82,12 @@ The active page's controls and accessibility labels use locale messages: navigat
 2. It copies each configured screenshot from the filesystem path stored in PostgreSQL into `public/images/project_screenshots/`, naming the copy from the project ID and file extension.
 3. Each generated screenshot copy receives mode `0o644` so the deployed image can be read by Nginx.
 4. It writes `public/data/projects.json` with localized content, links, technology names, version/date, authors, completion, and published image paths. Source filesystem paths and database credentials are omitted.
-5. Vite packages the generated JSON and public images into `dist/`. In the browser, `projectImageUrl()` prefixes the Vite base path and falls back to `images/default-project.svg` when no screenshot is configured.
+5. Vite packages generated assets into dist/. projectImageUrl() prefixes the Vite base path and uses images/default-project-image.svg when screenshotUrl is null.
 
-`npm run build` runs the exporter and then Vite. The workflow separates those operations so it can upload the exported assets before compiling the frontend. The runner needs traversal/read access to the source screenshots. A failed screenshot copy stops the exporter before it writes JSON.
+`npm run build` runs the exporter and then Vite. The workflow separates those operations so it can upload the exported assets before compiling the frontend. A caught per-project mkdir/copy/chmod failure logs the project ID and filesystem error code or message, leaves screenshotUrl null, and continues so the frontend uses the default. Missing-extension validation is still outside that catch and aborts; failure to copy the shared default image also aborts.
+
+
+Before the project loop, the exporter copies the shared default-project-image.svg from PORTFOLIO_SCREENSHOT_DIR when configured, or /mnt/hdd320_1/assets/zegirdor_portfolio/default-project-image.svg on the server, into public/images/default-project-image.svg and sets mode 0644. The directory uses an underscore (zegirdor_portfolio); the earlier hyphen spelling caused ENOENT and was corrected by the user, who then confirmed a successful build.
 
 Connection values are plain values in the ignored `.env.local` file for local use. GitHub Actions injects the same five `PG*` settings through repository secrets; secret values contain no assignment prefix or surrounding env-file quotes. Database secrets do not use the `VITE_` prefix.
 

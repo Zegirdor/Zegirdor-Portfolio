@@ -6,6 +6,7 @@ import Ripple from 'primevue/ripple'
 import FocusTrap from 'primevue/focustrap'
 import es from './locales/es.json'
 import en from './locales/en.json'
+import './font.css'
 import './style.css'
 import App from './App.vue'
 

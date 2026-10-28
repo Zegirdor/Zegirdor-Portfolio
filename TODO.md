@@ -1,19 +1,32 @@
 # Pending Tasks
 
-- [x] Localize or remove the English text/title/description embedded in public/images/default-project.svg (image work deferred by the user)
-- [x] Update project-loading error messages now that the database export is configured
-- [ ] Add a Matrix theme
+- [ ] Respect prefers-reduced-motion for the Matrix rain
+- [ ] Review Matrix rain resizing/drop coordinates and high-DPI canvas rendering
+- [ ] Verify repeated Matrix/Light/Dark switching, persisted selection, and animation/listener cleanup
+- [ ] Push feature/matrix-theme and confirm its push does not trigger the main-only deployment workflow before merging
+- [ ] Validate the implemented missing/unreadable screenshot fallback during an export
+- [ ] Extend screenshot fallback to invalid/missing-extension paths, which still throw before the copy try/catch
+- [ ] Make the WD Ghaster icon inherit the surrounding theme text color using a CSS mask (reference snippets: special_folder/Unused Snippets/snippets.js)
 - [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
 - [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
-- [ ] Review exporter TODOs: share the screenshot path definition, improve SQL formatting, and review the explicit JSON mapping
-- [ ] Preserve the original filesystem error details when screenshot copying fails
-- [ ] Change screenshot retrieval so an unreadable configured source uses the default screenshot instead of aborting the build
+- [ ] Review exporter TODOs: share the screenshot path definition, improve SQL formatting, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
 - [ ] Confirm WD font rendering and language-selector readability in the browser
 - [ ] Get rid of the HelloWorld.vue file.
 
 # Completed Tasks
 
+- [x] Add the Matrix theme
+  - [x] Create the Aura-derived Matrix preset and wire it through the theme definitions
+  - [x] Apply terminal typography through src/font.css and inherited filter-button fonts
+  - [x] Connect preset/class switching and Local Storage persistence
+  - [x] Style selectors, dropdowns, Chips, MeterGroup track, and text-button hover/pressed states
+  - [x] Add Matrix-only background digital rain and tune its speed/opacity; final appearance approved by the user
+- [x] Replace the English-text project placeholder with the language-neutral default-project-image.svg
+- [x] Update translated project-loading error messages to describe unavailable project data
+- [x] Copy the shared default screenshot during export using the corrected server directory and local override
+- [x] Log the original filesystem error code or message when a project screenshot copy fails
+- [x] Continue exporting after per-project screenshot copy failures and use the frontend default through a null screenshotUrl
 - [x] Translate the remaining active interface text and accessibility labels (navigation, selectors, layouts, filters, loading, screenshot descriptions, and completion announcements)
 - [x] Add translated screenshot-name fallback and parameterized completion announcements in both layouts
 - [x] Update page title, description, and html.lang when the selected language changes; retain initial English HTML defaults by choice

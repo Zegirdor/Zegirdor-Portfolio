@@ -11,6 +11,10 @@
   scroll-behavior: smooth;
 }
 
+:root.theme-matrix {
+	font-family: "MatrixTerminal", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -192,6 +196,7 @@ h1 span {
   padding: 0;
   border: 0;
   border-radius: 999px;
+  font-family: inherit;
   background: transparent;
   cursor: pointer;
 }
@@ -414,16 +419,10 @@ h1 span {
   font-family: Wingdings;
 } */
 
-@font-face {
-  font-family: 'Wingdings';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Wingdings'), url('assets/fonts/wingding.woff') format('woff');
-}
-
 /* Apply Wingdings throughout the page, including overlays. */
 .locale-wd * {
 	font-family: 'Wingdings', sans-serif;
+  font-size: small;
 }
 
 /* Keep the language selector and its dropdown options readable. */
@@ -437,4 +436,9 @@ h1 span {
 /* Preserve PrimeIcons. */
 .locale-wd .pi {
 	font-family: 'primeicons';
+}
+
+/* Matrix theme. Keeps the negative layer above the wrapper's background. */
+.theme-matrix .site-shell {
+	isolation: isolate;
 }
