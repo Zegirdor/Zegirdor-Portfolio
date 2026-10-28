@@ -4,7 +4,7 @@
 - [x] Review Matrix rain resizing/drop coordinates and high-DPI canvas rendering
 - [x] Verify repeated Matrix/Light/Dark switching, persisted selection, and animation/listener cleanup
 - [x] Push feature/matrix-theme and confirm its push does not trigger the main-only deployment workflow before merging
-- [ ] Validate the implemented missing/unreadable screenshot fallback during an export
+- [x] Validate the implemented missing/unreadable screenshot fallback during an export
 - [x] Extend screenshot fallback to invalid/missing-extension paths, which still throw before the copy try/catch
 - [ ] Make the WD Ghaster icon inherit the surrounding theme text color using a CSS mask (reference snippets: special_folder/Unused Snippets/snippets.js)
 - [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
@@ -13,6 +13,7 @@
 - [ ] Review exporter TODOs: share the screenshot path definition, improve SQL formatting, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
 - [x] Confirm WD font rendering and language-selector readability in the browser
 - [x] Get rid of the HelloWorld.vue file.
+- [x] Fix default image's size. It overflows.
 
 # Completed Tasks
 
