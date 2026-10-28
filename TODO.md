@@ -1,18 +1,18 @@
 # Pending Tasks
 
-- [ ] Respect prefers-reduced-motion for the Matrix rain
-- [ ] Review Matrix rain resizing/drop coordinates and high-DPI canvas rendering
-- [ ] Verify repeated Matrix/Light/Dark switching, persisted selection, and animation/listener cleanup
-- [ ] Push feature/matrix-theme and confirm its push does not trigger the main-only deployment workflow before merging
+- [x] Respect prefers-reduced-motion for the Matrix rain
+- [x] Review Matrix rain resizing/drop coordinates and high-DPI canvas rendering
+- [x] Verify repeated Matrix/Light/Dark switching, persisted selection, and animation/listener cleanup
+- [x] Push feature/matrix-theme and confirm its push does not trigger the main-only deployment workflow before merging
 - [ ] Validate the implemented missing/unreadable screenshot fallback during an export
-- [ ] Extend screenshot fallback to invalid/missing-extension paths, which still throw before the copy try/catch
+- [x] Extend screenshot fallback to invalid/missing-extension paths, which still throw before the copy try/catch
 - [ ] Make the WD Ghaster icon inherit the surrounding theme text color using a CSS mask (reference snippets: special_folder/Unused Snippets/snippets.js)
 - [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
 - [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
 - [ ] Review exporter TODOs: share the screenshot path definition, improve SQL formatting, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
-- [ ] Confirm WD font rendering and language-selector readability in the browser
-- [ ] Get rid of the HelloWorld.vue file.
+- [x] Confirm WD font rendering and language-selector readability in the browser
+- [x] Get rid of the HelloWorld.vue file.
 
 # Completed Tasks
 
