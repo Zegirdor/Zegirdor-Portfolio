@@ -157,13 +157,15 @@ onMounted(async () => {
 						<Select v-ripple v-model="selectedLanguage" :options="languageOptions" option-label="name" option-value="code" :aria-label="i18n('preferences.choose_language')" class="language-select">
 							<template #option="{ option }">
 								<span class="language-option">
-									<img class="language-flag" :src="option.flag" alt="" aria-hidden="true" />
+									<span v-if="option.code === 'wd'" class="language-flag ghaster-icon" aria-hidden="true"></span>
+									<img v-else class="language-flag" :src="option.flag" alt="" aria-hidden="true" />
 									<span>{{ option.name }}</span>
 								</span>
 							</template>
 							<template #value="{ value }">
 								<span v-if="getLanguageOption(value)" class="language-option">
-									<img class="language-flag" :src="getLanguageOption(value).flag" alt="" aria-hidden="true" />
+									<span v-if="value === 'wd'" class="language-flag ghaster-icon" aria-hidden="true"></span>
+									<img v-else class="language-flag" :src="getLanguageOption(value).flag" alt="" aria-hidden="true"/>
 									<span>{{ getLanguageOption(value).name }}</span>
 								</span>
 							</template>

@@ -442,3 +442,14 @@ h1 span {
 .theme-matrix .site-shell {
 	isolation: isolate;
 }
+
+/* The Ghaster Icon's mask */
+.ghaster-icon {
+	display: inline-block;
+	background-color: currentColor;
+	mask-image: url('./assets/locale_flags/wd_128x128.png');
+	mask-mode: alpha;
+	mask-size: contain;
+	mask-position: center;
+	mask-repeat: no-repeat;
+}
