@@ -345,7 +345,18 @@ onMounted(async () => {
 				<div><p class="eyebrow" v-html="i18n('skills_section.title_1')"></p><h2 v-html="i18n('skills_section.title_2')"></h2></div>
 				<div class="skills-copy">
 					<p v-html="i18n('skills_section.info_1')"></p>
-					<div class="skills-grid">
+					<p v-if="skillsLoading" role="status">
+						{{ i18n('skills_section.loading') }}
+					</p>
+
+					<p v-else-if="skillsLoadError" role="alert">
+						{{ i18n('skills_section.load_error') }}
+					</p>
+
+					<p v-else-if="skills.length === 0" role="status">
+						{{ i18n('skills_section.empty') }}
+					</p>
+					<div v-else class="skills-grid">
 						<section v-for="group in skillGroups" :key="group.category" class="skill-category">
 							<h3>{{ i18n(hasTranslation(`skill_categories.${group.category}`) ? `skill_categories.${group.category}` : 'skill_categories.missing') }}</h3>
 							<div class="skill-chips">

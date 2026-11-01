@@ -61,6 +61,9 @@
         "title_1": "My stack",
         "title_2": "The tools behind the ideas I bring to life.",
         "info_1": "A good developer is not the one who knows every language in the stack, but the one who knows it's stack.",
+        "loading": "Loading skills...",
+        "load_error": "Skills are currently unavailable. Please try again later.",
+        "empty": "No skills listed yet. Wow... such empty...",
         "skills_disclaimer": "Proficiency levels based on my own experience."
     },
     "skill_categories": {

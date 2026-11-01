@@ -3,9 +3,9 @@
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
 - [x] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
 - [x] Review exporter TODOs: share the screenshot path definition, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
-- [ ] Fix the header's style on Mobile
-- [ ] Translate Skills category headings, which currently display raw database values
-- [ ] Display translated Skills loading, error, and empty states using the existing skillsLoading/skillsLoadError refs
+- [x] Fix the header's style on Mobile
+- [x] Translate Skills category headings, which currently display raw database values
+- [x] Display translated Skills loading, error, and empty states using the existing skillsLoading/skillsLoadError refs
 - [ ] Respect prefers-reduced-motion for Matrix rain; current source still animates unconditionally
 - [ ] Review Matrix rain resize/drop coordinates and add devicePixelRatio-aware canvas scaling
 - [ ] Handle screenshot paths without a file extension through the default-image fallback; current validation still throws before the catch
