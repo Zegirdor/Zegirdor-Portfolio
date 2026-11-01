@@ -12,11 +12,19 @@ onMounted(() => {
     '(prefers-reduced-motion: reduce)',
   )
 
-  // Set full screen dimensions
-  const resizeCanvas = () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  };
+	let viewportWidth = 0;
+	let viewportHeight = 0;
+
+	// Keep drawing coordinates in CSS pixels and scale the backing buffer.
+	const resizeCanvas = () => {
+		viewportWidth = window.innerWidth;
+		viewportHeight = window.innerHeight;
+		const pixelRatio = window.devicePixelRatio || 1;
+
+		canvas.width = Math.round(viewportWidth * pixelRatio);
+		canvas.height = Math.round(viewportHeight * pixelRatio);
+		ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+	};
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
 
@@ -26,16 +34,16 @@ onMounted(() => {
 
   const fontSize = 16;
   // Calculate columns based on width and font size
-  let columns = Math.floor(canvas.width / fontSize);
+  let columns = Math.floor(viewportWidth / fontSize);
 
-  const randomStartingRow = () => -Math.floor(Math.random() * Math.ceil(canvas.height / fontSize))
+  const randomStartingRow = () => -Math.floor(Math.random() * Math.ceil(viewportHeight / fontSize))
   
   // Array to track the y-coordinate of each rain drop per column
   let rainDrops = Array.from({ length: columns }, randomStartingRow)
 
   // Recalculate columns seamlessly if window size changes
   const updateColumns = () => {
-    columns = Math.floor(canvas.width / fontSize);
+    columns = Math.floor(viewportWidth / fontSize);
     const oldDrops = [...rainDrops];
     rainDrops = Array.from( { length: columns }, (_, i) => oldDrops[i] ?? randomStartingRow())
   };
@@ -51,7 +59,7 @@ onMounted(() => {
 	lastDrawTime = timestamp;
     // Semi-transparent black background creates the trailing fade effect
     ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, viewportWidth, viewportHeight);
 
     ctx.fillStyle = '#0F0'; // Matrix green
     ctx.font = `${fontSize}px monospace`;
@@ -67,7 +75,7 @@ onMounted(() => {
       ctx.fillText(text, x, y);
 
       // Reset drop to the top with a randomized delay once it hits the bottom
-      if (y > canvas.height && Math.random() > 0.975) {
+      if (y > viewportHeight && Math.random() > 0.975) {
         rainDrops[i] = 0;
       }
       
@@ -82,7 +90,7 @@ onMounted(() => {
     if (motionPreference.matches) {
       cancelAnimationFrame(animationFrameId)
       animationFrameId = null
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, viewportWidth, viewportHeight)
       return
     }
 
