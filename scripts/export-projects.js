@@ -6,7 +6,7 @@ import pg from 'pg'
 const { Pool } = pg
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outputDirectory = path.join(projectRoot, 'public', 'data')
-const screenshotURLDirectory = path.join('images', 'project_screenshots') // Browser URL
+const screenshotURLDirectory = 'images/project_screenshots/' // Browser URL
 const screenshotDirectory = path.join(projectRoot, 'public', screenshotURLDirectory) // Exporter path
 const defaultImageName = "default-project-image.svg";
 
