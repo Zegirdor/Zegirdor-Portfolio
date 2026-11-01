@@ -120,6 +120,10 @@ a {
 	overflow: hidden;
 	border-radius: 1.5rem;
 	border: 1px solid var(--p-content-border-color);
+  align-self: center;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1 / 1;
 }
 
 #hero-right img {
