@@ -6,7 +6,7 @@ import pg from 'pg'
 const { Pool } = pg
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outputDirectory = path.join(projectRoot, 'public', 'data')
-const screenshotDirectory = path.join(projectRoot, 'public', 'images', 'project_screenshots') // TODO Sincronize to a single variable to match line 70
+const screenshotDirectory = path.join(projectRoot, 'public', 'images', 'project_screenshots') // DONE Sincronize to a single variable to match line 70
 const defaultImageName = "default-project-image.svg";
 
 const requiredEnvironment = ['PGHOST', 'PGPORT', 'PGDATABASE', 'PGUSER', 'PGPASSWORD']
@@ -117,7 +117,7 @@ try {
 			authors: row.authors,
 			technologies: row.technologies,
 			completion: row.completion,
-		}) // TODO: Check this to see if it can be simplified
+		}) // DONE: Check this to see if it can be simplified
 	}
 
 	await mkdir(outputDirectory, { recursive: true })

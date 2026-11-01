@@ -1,8 +1,8 @@
 # Pending Tasks
 
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
-- [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
-- [ ] Review exporter TODOs: share the screenshot path definition, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
+- [x] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
+- [x] Review exporter TODOs: share the screenshot path definition, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
 - [ ] Fix the header's style on Mobile
 - [ ] Translate Skills category headings, which currently display raw database values
 - [ ] Display translated Skills loading, error, and empty states using the existing skillsLoading/skillsLoadError refs

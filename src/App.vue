@@ -18,6 +18,7 @@ import { useI18n } from 'vue-i18n'
 import englishFlag from './assets/locale_flags/en_64x64.png'
 import spanishFlag from './assets/locale_flags/es_64x64.png'
 import ghasterFlag from './assets/locale_flags/wd_128x128.png'
+import profilePicture from './assets/images/profile.png'
 
 const projects = ref([])
 const projectsLoading = ref(true)
@@ -226,10 +227,15 @@ onMounted(async () => {
 
 		<main id="home">
 			<section class="hero section-wrap">
-				<p class="eyebrow" v-html="i18n('hero_section.title_1')"></p>
-				<h1 v-html="i18n('hero_section.title_2')"></h1>
-				<p class="hero-copy" v-html="i18n('hero_section.title_3')"></p>
-				<a class="hero-link" href="#projects">{{ i18n('hero_section.link_projects') }}&nbsp;<i class="pi pi-arrow-down"></i></a>
+				<div id="hero-left">
+					<p class="eyebrow" v-html="i18n('hero_section.title_1')"></p>
+					<h1 v-html="i18n('hero_section.title_2')"></h1>
+					<p class="hero-copy" v-html="i18n('hero_section.title_3')"></p>
+					<a class="hero-link" href="#projects">{{ i18n('hero_section.link_projects') }}&nbsp;<i class="pi pi-arrow-down"></i></a>
+				</div>
+				<div id="hero-right">
+					<img :src="profilePicture" :alt="i18n('hero_section.profile_pic_alt')">
+				</div>
 			</section>
 
 			<section id="projects" class="projects-section section-wrap">
