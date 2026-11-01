@@ -73,20 +73,20 @@ try {
 		let defaultScreenshotUrl = null
 
 		if (row.screenshotPath) {
-			const extension = path.extname(row.screenshotPath).toLowerCase()
-
-			if (!extension) {
-				throw new Error('Project ID ' + row.id + ' has a screenshot path without a file extension.')
-			}
-
-			const screenshotFileName = String(row.id) + extension
-
-			// Locally it uses a local screenshots folder, and on Linux it uses the server's file.
-			const screenshotSource = process.env.PORTFOLIO_SCREENSHOT_DIR
-			? path.resolve(projectRoot, process.env.PORTFOLIO_SCREENSHOT_DIR, screenshotFileName)
-			: row.screenshotPath
-
 			try {
+				const extension = path.extname(row.screenshotPath).toLowerCase()
+
+				if (!extension) {
+					throw new Error('Project ID ' + row.id + ' has a screenshot path without a file extension.')
+				}
+
+				const screenshotFileName = String(row.id) + extension
+
+				// Locally it uses a local screenshots folder, and on Linux it uses the server's file.
+				const screenshotSource = process.env.PORTFOLIO_SCREENSHOT_DIR
+					? path.resolve(projectRoot, process.env.PORTFOLIO_SCREENSHOT_DIR, screenshotFileName)
+					: row.screenshotPath
+
 				await mkdir(screenshotDirectory, { recursive: true })
 				
 				const destination = path.join(screenshotDirectory, screenshotFileName)

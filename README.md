@@ -9,9 +9,10 @@ A responsive, single-page portfolio built with Vue 3, Vite, and PrimeVue. Postgr
 - Demo confirmation through a Popover, keyboard focus trapping, Ripple feedback, and loading skeletons.
 - Optional completion percentages, labeled Complete at 100% and In progress below 100%, with translated labels. In list view, progress appears below the screenshot.
 - English and Spanish interface and accessibility translations through Vue I18n, sharing one URL. Navigation, selectors, project controls, screenshot descriptions, and completion announcements use locale messages; the user manually checked the translations.
-- A toolbar language selector with flags and a theme selector with icons; each has custom dropdown and selected-value templates.
-- Light, Dark, and Matrix themes with semantic PrimeVue colors. Matrix has its own Aura-derived palette, terminal typography, and subtle animated digital rain.
-- A dedicated Skills/My stack section with database-derived category groups, technology/proficiency Chips, bilingual proficiency labels, and a self-assessment disclaimer.
+- A responsive header with a collapsible mobile navigation row, centered brand, and always-visible icon-only language/theme selectors. Dropdown options retain their labels; desktop selectors show both icons and names.
+- Light, Dark, and Matrix themes with semantic PrimeVue colors. Matrix has its own Aura-derived palette, terminal typography, high-DPI digital rain, and live reduced-motion preference handling.
+- A dedicated Skills/My stack section with database-derived groups, translated category/proficiency labels and missing-category fallback, a self-assessment disclaimer, and translated loading/error/empty states.
+- A locally bundled profile picture beside the hero text, with translated alternative text and responsive sizing.
 - About content and contact links; there is no contact submission form.
 - A GIF favicon referenced from `public/favicon.gif`.
 
@@ -35,7 +36,7 @@ See [TODO.md](TODO.md) for remaining work and [implementations.md](implementatio
 5. Vite copies these assets into `dist/` alongside the compiled frontend.
 6. Independent onMounted callbacks fetch data/projects.json and data/technologies.json relative to the Vite base URL. Project filtering, locale switching, and skill grouping then run in the browser.
 
-The browser does not query PostgreSQL. Database changes appear after a new export and build/deployment. Caught per-project directory/copy/permission failures log the original error and leave screenshotUrl null so the frontend uses the shared default. A missing file extension still aborts before that catch, and failure to copy the required shared default image also stops the export.
+The browser does not query PostgreSQL. Database changes appear after a new export and build/deployment. Screenshot extension validation and source-path preparation now run inside the per-project try/catch alongside directory creation, copying, and permissions. Missing extensions or other caught failures log the project ID and error, leave screenshotUrl null, and allow the export to continue; the frontend uses the shared default. Failure to copy the required shared default image still stops the export.
 
 ## Database setup
 
@@ -146,7 +147,9 @@ Database project text is handled separately: `projectText()` chooses the active 
 
 Each theme definition stores its name, icon, and preset. The watcher looks up that definition, calls usePreset(), applies the matching theme-* class to html, and saves the selected name. Aura supplies Light/Dark using .theme-dark; src/themes/matrix.mjs supplies Matrix. Site CSS uses semantic tokens for backgrounds, text, and borders.
 
-Matrix uses accent #1EFF5A, background #040805, and foreground #00FF40. src/font.css registers MatrixTerminal from TerminalVision.otf and Wingdings from wingding.woff. MatrixRain.vue mounts only for Matrix and unmounts when another theme is selected, cancelling its animation frame and removing resize listeners. Its canvas targets about 12 redraws per second with opacity 0.1 and pointer-events: none. Reduced-motion suppression and high-DPI scaling remain follow-ups.
+Matrix uses accent #1EFF5A, background #040805, and foreground #00FF40. src/font.css registers MatrixTerminal from TerminalVision.otf and Wingdings from wingding.woff. MatrixRain.vue mounts only for Matrix and unmounts when another theme is selected, cancelling its animation frame and removing resize listeners. Its canvas targets about 12 redraws per second with opacity 0.1 and pointer-events: none. Each column starts at a random negative row for staggered arrivals; resizing preserves existing rows, including zero. A matchMedia('(prefers-reduced-motion: reduce)') listener prevents startup or stops/clears the animation when reduced motion is requested and restarts it when allowed. The listener is removed on unmount.
+
+Canvas drawing coordinates use viewportWidth/viewportHeight in CSS pixels. On mount/resize, its drawing buffer is sized to the rounded logical dimensions multiplied by devicePixelRatio, followed by ctx.setTransform(ratio, 0, 0, ratio, 0, 0). This improves high-density rendering while retaining 16px glyphs and the same logical column count/speed. There is no separate listener for pixel-ratio changes that do not trigger resize.
 
 **WD Ghaster** is an optional novelty locale (`wd`) that reuses English messages through `wd: en`; it has no separate JSON file. Selecting it applies `.locale-wd` and the Wingdings font registered in `src/font.css` from `src/assets/fonts/wingding.woff` (or an installed Wingdings font). The language selector remains readable, and PrimeIcons retain their own font. WD is not saved over the normal language preference, so refreshing restores the saved English/Spanish choice. Its language icon uses the transparent PNG as a CSS alpha mask with currentColor in both the dropdown and selected value, adapting to the surrounding text color.
 
@@ -158,7 +161,15 @@ The immediate language watcher also reads meta.title and meta.description to upd
 
 PrimeVue's selector announcements use the primevue messages in the same JSON files. usePrimeVue() supplies the configuration, and the language watcher updates selectionMessage, emptySelectionMessage, and emptyMessage using Object.assign. Vue I18n's {count} receives the literal {0} so PrimeVue can substitute the selected-item count afterward. This keeps the current selectors' internal messages synchronized with the page.
 
-The owner manually verified the existing interface translations and the new proficiency labels. The shared default-project-image.svg is language-neutral, and the project-loading error describes unavailable project data. Skills category headings still display the database category names directly; their translations and visible skills loading/error/empty states remain follow-ups.
+The owner manually verified the existing interface, proficiency, and category translations. Categories use skill_categories.<category>, checked with te() aliased to hasTranslation; an absent current-locale key uses skill_categories.missing. Skills messages under skills_section.loading/load_error/empty form a v-if/v-else-if/v-else chain before the populated grid. Loading and empty messages use role=status; the error uses role=alert. The owner observed the loading message; forced error/empty conditions were not separately verified in this session. The shared default-project-image.svg is language-neutral.
+
+## Responsive header and hero photo
+
+At widths up to 1110px, .site-toolbar.p-toolbar uses named grid areas for the menu toggle, centered brand, and preferences on the top row, with navigation spanning the row underneath. mobileMenuOpen toggles the mobile-menu-open class and aria-expanded; the button's translated label switches between open/close and aria-controls targets header-navigation. Only navigation collapses. Preference text is hidden in the selected-value slots using .preference-label; dropdown option text remains visible. The more specific Toolbar selector overrides PrimeVue's default flex layout.
+
+The wider Matrix font has its own conditional site-toolbar-matrix-theme class. Current desktop rules cap that header at 1400px from a viewport width of 1418px and disable flex wrapping from 1110px to 1417px. The owner reviewed the resulting desktop/mobile layout.
+
+App.vue imports src/assets/images/profile.png and binds it with :src="profilePicture", so Vite bundles it for both deployment targets. The hero uses a 2fr/1fr text/photo grid above 800px and stacks below that breakpoint. The photo wrapper has align-self: center, height: auto, and aspect-ratio: 1 / 1; the image uses object-fit: cover. Existing mobile photo sizing overrides are retained. This styling was chosen to avoid stretching the photo with taller Matrix text, and the owner accepted the result.
 
 ## Exported project format
 
@@ -187,7 +198,7 @@ App.vue stores this catalog in skills. Its computed skillGroups builds a Map key
 
 The root-level proficiency messages in en.json/es.json translate the stored levels. For lookup only, very high becomes very_high through replaceAll(' ', '_'); the database value remains unchanged. The lookup is `proficiency.<normalized-value>`, not `skills_section.proficiency`. Technology names remain proper names.
 
-skillsLoading and skillsLoadError are tracked separately from the projects request, but visible loading/error/empty UI is not implemented yet.
+skillsLoading and skillsLoadError are tracked separately from the projects request and select the visible loading/error/empty feedback or populated skill grid.
 
 ## GitHub Actions deployment
 
@@ -223,7 +234,7 @@ Workflow concurrency uses the shared group `zegirdor-portfolio-deploy` with `can
 - An existing Nginx site configuration pointing to that document root; the workflow publishes static files and does not install or reload Nginx configuration.
 - GitHub Pages configured to deploy through GitHub Actions.
 
-The project owner has confirmed successful local/home-server builds, live screenshot HTTP 200 and GitHub Pages data/image checks for the previous release. The owner also confirmed a standalone export of 1 project and 22 technologies and tested the Skills/proficiency rendering. Deployment of this latest feature and execution of the GitHub fallback path were not verified during this documentation update.
+The project owner has confirmed successful local/home-server builds, live screenshot HTTP 200 and GitHub Pages data/image checks for the previous release. The owner also confirmed a standalone export of 1 project and 22 technologies and tested the Skills/proficiency rendering. The owner also tested category translations and approved the header/photo layout. In-memory Node checks covered rain scaling at DPR 1/1.25/2, resize/drop preservation, reduced-motion toggling/cleanup, and screenshot fallback for extensionless/missing/unreadable files and chmod failures. The exporter still rejects a missing shared default image. These checks mocked browser/filesystem/database APIs; physical high-DPI sharpness, a real database export of the new edge case, this deployment, and the GitHub fallback path were not verified here.
 
 ## License
 

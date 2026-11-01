@@ -1,17 +1,17 @@
 # Pending Tasks
 
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
-- [x] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
-- [x] Review exporter TODOs: share the screenshot path definition, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
-- [x] Fix the header's style on Mobile
-- [x] Translate Skills category headings, which currently display raw database values
-- [x] Display translated Skills loading, error, and empty states using the existing skillsLoading/skillsLoadError refs
-- [x] Respect prefers-reduced-motion for Matrix rain; current source still animates unconditionally
-- [ ] Review Matrix rain resize/drop coordinates and add devicePixelRatio-aware canvas scaling
-- [ ] Handle screenshot paths without a file extension through the default-image fallback; current validation still throws before the catch
+- [ ] Finish exporter cleanup: consolidate generated screenshot directory/URL definitions and remove the unused defaultScreenshotUrl variable
 
 # Completed Tasks
 
+- [x] Add a locally bundled hero profile picture with translated alternative text and responsive styling
+- [x] Add collapsible mobile navigation with centered brand and always-visible icon-only preference selectors
+- [x] Translate Skills category headings and provide a missing-category translation fallback
+- [x] Display translated Skills loading, error, and empty states using the existing skillsLoading/skillsLoadError refs
+- [x] Respect prefers-reduced-motion at startup and on preference changes, with listener/frame cleanup
+- [x] Preserve rain rows on resize, stagger starting positions, and add devicePixelRatio-aware canvas scaling
+- [x] Warn and use the default screenshot for extensionless paths without aborting the export
 - [x] Implement the dedicated Skills/proficiency section, replacing the unused MeterGroup placeholder
   - [x] Export the skills catalog
   - [x] Render category groups and chips
