@@ -1,26 +1,27 @@
 # Pending Tasks
 
-- [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
-  - [x] Export the skills catalog
-  - [x] Render category groups and chips
-    - [ ] Make rendering translations
-    - [ ] Make rendering level Capitalized Text
-  - [ ] Translate labels and style across themes
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
 - [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
-- [ ] Review exporter TODOs: share the screenshot path definition, improve SQL formatting, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
-- [ ] Add a photo of myself to the page
+- [ ] Review exporter TODOs: share the screenshot path definition, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
 - [ ] Fix the header's style on Mobile
+- [ ] Translate Skills category headings, which currently display raw database values
+- [ ] Display translated Skills loading, error, and empty states using the existing skillsLoading/skillsLoadError refs
+- [ ] Respect prefers-reduced-motion for Matrix rain; current source still animates unconditionally
+- [ ] Review Matrix rain resize/drop coordinates and add devicePixelRatio-aware canvas scaling
+- [ ] Handle screenshot paths without a file extension through the default-image fallback; current validation still throws before the catch
 
 # Completed Tasks
 
+- [x] Implement the dedicated Skills/proficiency section, replacing the unused MeterGroup placeholder
+  - [x] Export the skills catalog
+  - [x] Render category groups and chips
+  - [x] Translate the Skills navigation, section copy, disclaimer, and proficiency labels
+  - [x] Capitalize displayed proficiency labels
+  - [x] Style the responsive category groups and Chips using theme-aware tokens
 - [x] Make the WD Ghaster icon inherit the surrounding theme text color using a CSS mask in both dropdown options and the selected value
-- [x] Respect prefers-reduced-motion for the Matrix rain
-- [x] Review Matrix rain resizing/drop coordinates and high-DPI canvas rendering
 - [x] Verify repeated Matrix/Light/Dark switching, persisted selection, and animation/listener cleanup
 - [x] Push feature/matrix-theme and confirm its push does not trigger the main-only deployment workflow before merging
 - [x] Validate the implemented missing/unreadable screenshot fallback during an export
-- [x] Extend screenshot fallback to invalid/missing-extension paths, which still throw before the copy try/catch
 - [x] Confirm WD font rendering and language-selector readability in the browser
 - [x] Get rid of the HelloWorld.vue file.
 - [x] Fix default image's size. It overflows.

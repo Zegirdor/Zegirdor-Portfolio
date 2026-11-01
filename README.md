@@ -1,6 +1,6 @@
 # ZegirdorDev Portfolio
 
-A responsive, single-page portfolio built with Vue 3, Vite, and PrimeVue. PostgreSQL supplies project records during the build; the published website consists of static files served by GitHub Pages and Nginx on the Debian home server.
+A responsive, single-page portfolio built with Vue 3, Vite, and PrimeVue. PostgreSQL supplies project and technology/proficiency records during the build; the published website consists of static files served by GitHub Pages and Nginx on the Debian home server.
 
 ## Current features
 
@@ -10,8 +10,9 @@ A responsive, single-page portfolio built with Vue 3, Vite, and PrimeVue. Postgr
 - Optional completion percentages, labeled Complete at 100% and In progress below 100%, with translated labels. In list view, progress appears below the screenshot.
 - English and Spanish interface and accessibility translations through Vue I18n, sharing one URL. Navigation, selectors, project controls, screenshot descriptions, and completion announcements use locale messages; the user manually checked the translations.
 - A toolbar language selector with flags and a theme selector with icons; each has custom dropdown and selected-value templates.
-- Light and Dark themes with semantic PrimeVue colors. Matrix is selectable, but its distinct styling remains pending.
-- About content and contact links. The skills MeterGroup has no data yet; there is no contact submission form.
+- Light, Dark, and Matrix themes with semantic PrimeVue colors. Matrix has its own Aura-derived palette, terminal typography, and subtle animated digital rain.
+- A dedicated Skills/My stack section with database-derived category groups, technology/proficiency Chips, bilingual proficiency labels, and a self-assessment disclaimer.
+- About content and contact links; there is no contact submission form.
 - A GIF favicon referenced from `public/favicon.gif`.
 
 See [TODO.md](TODO.md) for remaining work and [implementations.md](implementations.md) for component documentation and implementation details.
@@ -30,11 +31,11 @@ See [TODO.md](TODO.md) for remaining work and [implementations.md](implementatio
 1. `scripts/export-projects.js` connects to PostgreSQL using the build environment.
 2. It selects repositories with `Is_Visible = TRUE`, joins their technology tags, and orders them by display order, project date, then ID.
 3. Configured screenshots are copied into `public/images/project_screenshots/<id>.<extension>`. Generated copies receive mode `0644` for Nginx readability.
-4. The exporter writes `public/data/projects.json`. It includes public project fields and relative image URLs, without database credentials or source filesystem paths.
+4. The exporter writes public/data/projects.json and separately selects the full Technology catalog into public/data/technologies.json. The latter contains id, name, category, and proficiency, including technologies not attached to projects. Neither file contains database credentials or screenshot source paths.
 5. Vite copies these assets into `dist/` alongside the compiled frontend.
-6. The browser fetches `data/projects.json` relative to the Vite base URL when the app mounts. Language changes and technology filters then run in the browser.
+6. Independent onMounted callbacks fetch data/projects.json and data/technologies.json relative to the Vite base URL. Project filtering, locale switching, and skill grouping then run in the browser.
 
-The browser does not query PostgreSQL. Database changes appear after a new export and build/deployment. A configured screenshot that cannot be copied stops the export before JSON is written; a project with no screenshot path uses the frontend's default image.
+The browser does not query PostgreSQL. Database changes appear after a new export and build/deployment. Caught per-project directory/copy/permission failures log the original error and leave screenshotUrl null so the frontend uses the shared default. A missing file extension still aborts before that catch, and failure to copy the required shared default image also stops the export.
 
 ## Database setup
 
@@ -89,7 +90,10 @@ On Windows, a Linux screenshot path such as `/mnt/...` is not directly accessibl
 special_folder/
   project_screenshots/
     1.png
+    default-project-image.svg
 ```
+
+The override directory must also contain default-project-image.svg. Without an override, the shared default is read from /mnt/hdd320_1/assets/zegirdor_portfolio/default-project-image.svg (underscore directory) and copied to public/images/default-project-image.svg with mode 0644.
 
 A relative override directory is resolved from the project root; an absolute directory also works. With the variable set, the exporter uses that directory for every configured screenshot. Without it, it uses the original paths from PostgreSQL. This is a source override, not an automatic retry after a failed copy.
 
@@ -99,7 +103,7 @@ Keep local source copies out of Git using an unquoted `/special_folder/` entry i
 
 ## Develop, build, and preview
 
-Generate or refresh the project JSON and screenshots without compiling the frontend:
+Generate or refresh both JSON catalogs and screenshots without compiling the frontend:
 
 ```sh
 node --env-file-if-exists=.env.local scripts/export-projects.js
@@ -140,9 +144,11 @@ Database project text is handled separately: `projectText()` chooses the active 
 | Language | `zegirdor-portfolio-language` | Persists English or Spanish. |
 | Theme | `zegirdor-portfolio-theme` | Persists the selected Light, Dark, or Matrix theme name. |
 
-The theme watcher applies the matching `theme-*` class to `<html>`. Aura uses `.theme-dark` for Dark mode, while the site's CSS uses semantic tokens for backgrounds, text, and borders.
+Each theme definition stores its name, icon, and preset. The watcher looks up that definition, calls usePreset(), applies the matching theme-* class to html, and saves the selected name. Aura supplies Light/Dark using .theme-dark; src/themes/matrix.mjs supplies Matrix. Site CSS uses semantic tokens for backgrounds, text, and borders.
 
-**WD Ghaster** is an optional novelty locale (`wd`) that reuses English messages through `wd: en`; it has no separate JSON file. Selecting it applies `.locale-wd` and the Wingdings font registered in `src/style.css` from `src/assets/fonts/wingding.woff` (or an installed Wingdings font). The language selector remains readable, and PrimeIcons retain their own font. WD is not saved over the normal language preference, so refreshing restores the saved English/Spanish choice.
+Matrix uses accent #1EFF5A, background #040805, and foreground #00FF40. src/font.css registers MatrixTerminal from TerminalVision.otf and Wingdings from wingding.woff. MatrixRain.vue mounts only for Matrix and unmounts when another theme is selected, cancelling its animation frame and removing resize listeners. Its canvas targets about 12 redraws per second with opacity 0.1 and pointer-events: none. Reduced-motion suppression and high-DPI scaling remain follow-ups.
+
+**WD Ghaster** is an optional novelty locale (`wd`) that reuses English messages through `wd: en`; it has no separate JSON file. Selecting it applies `.locale-wd` and the Wingdings font registered in `src/font.css` from `src/assets/fonts/wingding.woff` (or an installed Wingdings font). The language selector remains readable, and PrimeIcons retain their own font. WD is not saved over the normal language preference, so refreshing restores the saved English/Spanish choice. Its language icon uses the transparent PNG as a CSS alpha mask with currentColor in both the dropdown and selected value, adapting to the surrounding text color.
 
 ### Localization details
 
@@ -152,7 +158,7 @@ The immediate language watcher also reads meta.title and meta.description to upd
 
 PrimeVue's selector announcements use the primevue messages in the same JSON files. usePrimeVue() supplies the configuration, and the language watcher updates selectionMessage, emptySelectionMessage, and emptyMessage using Object.assign. Vue I18n's {count} receives the literal {0} so PrimeVue can substitute the selected-item count afterward. This keeps the current selectors' internal messages synchronized with the page.
 
-The interface translation work has been manually verified by the owner. English text embedded in public/images/default-project.svg is deferred as a separate image task. Rewording the already-translated project-loading error message also remains pending.
+The owner manually verified the existing interface translations and the new proficiency labels. The shared default-project-image.svg is language-neutral, and the project-loading error describes unavailable project data. Skills category headings still display the database category names directly; their translations and visible skills loading/error/empty states remain follow-ups.
 
 ## Exported project format
 
@@ -171,7 +177,17 @@ The generated JSON contains an array with these fields:
 | `technologies` | Technology-name array used by project tags and filters. |
 | `completion` | Optional numeric completion percentage from 0 to 100. |
 
-The frontend prefixes image URLs with `import.meta.env.BASE_URL` and uses `images/default-project.svg` when no screenshot URL is provided.
+The frontend prefixes image URLs with `import.meta.env.BASE_URL` and uses `images/default-project-image.svg` when no screenshot URL is provided.
+
+## Exported skills format
+
+public/data/technologies.json contains an array of objects with id, name, category, and proficiency. IDs are exported as strings by node-postgres for bigint identifiers; names and proficiency/category values come directly from PostgreSQL.
+
+App.vue stores this catalog in skills. Its computed skillGroups builds a Map keyed by category and converts it into { category, items } objects with Array.from. This derives the groups and their order from the export instead of maintaining a frontend category list. The responsive #skills section renders two columns that stack on small screens.
+
+The root-level proficiency messages in en.json/es.json translate the stored levels. For lookup only, very high becomes very_high through replaceAll(' ', '_'); the database value remains unchanged. The lookup is `proficiency.<normalized-value>`, not `skills_section.proficiency`. Technology names remain proper names.
+
+skillsLoading and skillsLoadError are tracked separately from the projects request, but visible loading/error/empty UI is not implemented yet.
 
 ## GitHub Actions deployment
 
@@ -207,7 +223,7 @@ Workflow concurrency uses the shared group `zegirdor-portfolio-deploy` with `can
 - An existing Nginx site configuration pointing to that document root; the workflow publishes static files and does not install or reload Nginx configuration.
 - GitHub Pages configured to deploy through GitHub Actions.
 
-The project owner has confirmed successful local/home-server builds, live screenshot HTTP 200 and GitHub Pages data/image checks for the previous release. The current interface translations have been manually checked. Execution of the GitHub fallback path remains unverified.
+The project owner has confirmed successful local/home-server builds, live screenshot HTTP 200 and GitHub Pages data/image checks for the previous release. The owner also confirmed a standalone export of 1 project and 22 technologies and tested the Skills/proficiency rendering. Deployment of this latest feature and execution of the GitHub fallback path were not verified during this documentation update.
 
 ## License
 

@@ -6,7 +6,7 @@ This file records the technologies and PrimeVue components used by the portfolio
 
 | Technology | Documentation | Use in this project |
 |---|---|---|
-| Vue 3 | [Vue guide](https://vuejs.org/guide/introduction.html) | Reactive project listings, technology filters, preferences, and reusable UI components. |
+| Vue 3 | [Vue guide](https://vuejs.org/guide/introduction.html) | Reactive project listings, database-derived skill groups, technology filters, preferences, and reusable UI components. |
 | Vite | [Vite static deployment](https://vite.dev/guide/static-deploy) | Development server and production bundler. Static output in `dist/` is deployed to GitHub Pages and Nginx with `--base=./`. |
 | PrimeVue | [PrimeVue installation](https://primevue.dev/installation/) | UI component library. The current package manifest declares PrimeVue 5. |
 | Aura and Matrix presets | [Styled theming](https://primevue.dev/theming/styled/) | Aura supplies Light/Dark; src/themes/matrix.mjs extends it for Matrix. Each theme option contains its preset, and the watcher selects it with usePreset() while applying the matching theme-* class. |
@@ -28,7 +28,9 @@ Theme choices are Light, Dark, and Matrix. Each option stores theme, icon, and p
 
 The language selector uses PNG flags in src/assets/locale_flags/ and offers es, en, and WD Ghaster (wd). It changes Vue I18n's locale and persists normal en/es choices under zegirdor-portfolio-language. WD toggles locale-wd without overwriting the saved normal language. Project names/descriptions remain language-keyed JSONB; projectText() selects the active locale, falls back to English, and accepts plain strings.
 
-The active page's controls and accessibility labels use locale messages: navigation/section labels, language/theme selectors, grid/list controls, technology filtering, loading, project actions, skill-summary labeling, and demo confirmation. Screenshot descriptions interpolate {name} with a translated unnamed-project fallback; completion labels interpolate {percentage}. Props bind expressions such as :label="i18n('projects.view_demo')". Fixed markup in trusted local messages uses v-html; project names/descriptions render as text.
+The dedicated #skills section has a navigation link, localized heading/copy/disclaimer, and Chips showing each technology name and a translated proficiency label. The proficiency messages live at the root of en.json/es.json; the lookup uses proficiency.${skill.proficiency.replaceAll(' ', '_')}. Category headings still render the raw database category and need translation. skillsLoading/skillsLoadError are maintained but are not yet displayed in the section.
+
+The active page's controls and accessibility labels use locale messages: navigation/section labels, language/theme selectors, grid/list controls, technology filtering, loading, project actions, Skills navigation/proficiency labels, and demo confirmation. Screenshot descriptions interpolate {name} with a translated unnamed-project fallback; completion labels interpolate {percentage}. Props bind expressions such as :label="i18n('projects.view_demo')". Fixed markup in trusted local messages uses v-html; project names/descriptions render as text.
 
 ## Localization and accessibility
 
@@ -43,20 +45,20 @@ The active page's controls and accessibility labels use locale messages: navigat
 ## Matrix theme and animated background
 
 - [src/themes/matrix.mjs](src/themes/matrix.mjs) defines the preset using definePreset(Aura, ...). Chosen accent is #1EFF5A, background/contrast is #040805, and foreground is #00FF40. Shared tokens cover content, form fields, overlays, and dropdown option states; component tokens customize Chips and primary text-button hover/pressed backgrounds.
-- The white strip inspected during styling was the empty MeterGroup track, whose background follows content.borderColor. Matrix sets that token to dark green; the skills data itself remains pending.
+- Matrix content.borderColor also corrected the former empty MeterGroup track. That placeholder/import have since been removed in favor of the standalone Skills section.
 - [src/font.css](src/font.css) registers MatrixTerminal from assets/fonts/TerminalVision.otf as OpenType with font-display: swap. :root.theme-matrix applies the terminal stack; .technology-filter uses font-family: inherit so native filter buttons and their Chips follow it.
 - [src/components/MatrixRain.vue](src/components/MatrixRain.vue) renders an aria-hidden fixed canvas. App.vue mounts it inside .site-shell before the header only when selectedTheme === 'matrix'. The component has resize listeners and an animation-frame cleanup callback for unmounting.
 - The rain uses randomized Katakana, Latin letters, and digits with 16px monospace glyphs, a translucent black fade, and green #0F0 drawing. requestAnimationFrame is timestamp-throttled to a maximum target of about 12 drawing updates per second; drops advance once per redraw. This is throttling rather than fully delta-time-integrated movement.
 - Final canvas CSS uses z-index: -1, pointer-events: none, background-color: #040805, and opacity: 0.1. The .theme-matrix .site-shell isolation rule remains. The user removed the experimental section-background transparency block and preferred adjusting rain opacity directly; the screenshot and user report confirm the final appearance is satisfactory.
-- Remaining rain follow-ups include reduced-motion handling, resize/drop-coordinate review and high-DPI rendering, plus explicit checks of repeated theme switching and cleanup. A feature-branch push/deployment-trigger check is still pending.
-- The WD Ghaster icon's currentColor alpha-mask approach is deferred. Both Select-slot replacements and the CSS are saved in special_folder/Unused Snippets/snippets.js; the earlier rain reference remains in special_folder/Unused Snippets/matrix-rain-reference.vue. These local references are ignored by Git.
+- Current source still lacks reduced-motion suppression and devicePixelRatio scaling, and drop-coordinate handling merits review. Earlier theme-switch/persistence/cleanup and feature-branch trigger checks are marked complete by the owner; no new runtime verification was performed for this documentation update.
+- The WD Ghaster currentColor alpha mask is implemented in both language Select slots. .ghaster-icon uses the transparent wd_128x128.png as mask-image, mask-mode: alpha, contain/center/no-repeat, and background-color: currentColor; .language-flag supplies dimensions. The other flags remain images. Earlier snippets/rain references remain under ignored special_folder/.
 
 ## Project interactions
 
 | Component | Documentation | Use in this project |
 |---|---|---|
 | Popover | [Popover](https://primevue.dev/popover/) | Asks for confirmation before opening a demo in a new tab. |
-| Chip | [Chip](https://primevue.dev/chip/) | Technology labels in project cards and filter controls. |
+| Chip | [Chip](https://primevue.dev/chip/) | Technology labels in project cards/filter controls and name/proficiency pairs in the dedicated Skills section. |
 | FocusTrap directive | [FocusTrap](https://primevue.dev/focustrap/) | Keeps keyboard focus within the demo-confirmation overlay. |
 | Ripple directive | [Ripple](https://primevue.dev/ripple/) | Click feedback on selected buttons and controls. Enabled in PrimeVue configuration and registered as a directive. |
 | Skeleton | [Skeleton](https://primevue.dev/skeleton/) | Placeholder cards while the browser fetches the static project JSON. |
@@ -65,7 +67,7 @@ The active page's controls and accessibility labels use locale messages: navigat
 
 | Component or feature | Documentation | Current use |
 |---|---|---|
-| MeterGroup | [MeterGroup](https://primevue.dev/metergroup/) | The About section currently supplies an empty array. The skills/proficiency display and its metric remain undecided. |
+| Skills/proficiency | [Chip](https://primevue.dev/chip/) | A standalone #skills section groups the full Technology catalog by its database categories. Each Chip pairs the technology name with a translated self-assessed proficiency label. Replaces the unused MeterGroup placeholder. |
 | ProgressSpinner | [ProgressSpinner](https://primevue.dev/progressspinner/) | Determinate completion display in both layouts, with larger percentage text. A null value hides it; exactly 100 uses the translated Complete label, and lower values use In progress. The accessible percentage announcement is also translated. |
 | Contact form | [PrimeVue Forms](https://primevue.dev/forms/) | Deferred. The Contact section currently provides translated contact information and external links. A submission form would need a server endpoint or form service. |
 
@@ -73,7 +75,7 @@ The active page's controls and accessibility labels use locale messages: navigat
 
 - [Schema SQL](database/schema/Zegirdor_Portfolio_database_schema_v0.5.sql) defines `Repository`, `Technology`, and the `Repository_Technology` junction table, their constraints, and indexes.
 - [Population SQL](database/data/Zegirdor_Portfolio_data_population_v0.5.sql) records technology/proficiency values, the wedding project, and its technology associations.
-- Repository names and descriptions use language-keyed JSONB. The technology catalog includes category and personal proficiency; it can later support a skills section separately from project tags.
+- Repository names/descriptions use language-keyed JSONB. The full Technology catalog is now exported with id, name, category, and proficiency for Skills, separately from the technology-name tags attached to projects.
 - The SQL scripts are reference/setup files. The deployment workflow does not execute them. The exporter performs SELECT queries and publishes only repositories marked visible.
 
 ## Static export and screenshots
@@ -81,8 +83,8 @@ The active page's controls and accessibility labels use locale messages: navigat
 1. [scripts/export-projects.js](scripts/export-projects.js) queries visible repositories and joins their technology tags.
 2. It copies each configured screenshot from the filesystem path stored in PostgreSQL into `public/images/project_screenshots/`, naming the copy from the project ID and file extension.
 3. Each generated screenshot copy receives mode `0o644` so the deployed image can be read by Nginx.
-4. It writes `public/data/projects.json` with localized content, links, technology names, version/date, authors, completion, and published image paths. Source filesystem paths and database credentials are omitted.
-5. Vite packages generated assets into dist/. projectImageUrl() prefixes the Vite base path and uses images/default-project-image.svg when screenshotUrl is null.
+4. It writes public/data/projects.json with localized project content, links, tags, version/date, authors, completion, and image URLs. A separate SELECT ID, Name, Category, Proficiency FROM Technology ORDER BY Category, Name writes public/data/technologies.json for every technology, even without project associations. Neither output includes database credentials or screenshot source paths.
+5. Vite packages generated assets into dist/. Independent onMounted callbacks fetch the project/technology JSON. skillGroups uses a computed Map and Array.from to derive category groups without hardcoding database data. projectImageUrl() prefixes the Vite base path and uses images/default-project-image.svg when screenshotUrl is null.
 
 `npm run build` runs the exporter and then Vite. The workflow separates those operations so it can upload the exported assets before compiling the frontend. A caught per-project mkdir/copy/chmod failure logs the project ID and filesystem error code or message, leaves screenshotUrl null, and continues so the frontend uses the default. Missing-extension validation is still outside that catch and aborts; failure to copy the shared default image also aborts.
 
@@ -104,4 +106,4 @@ The [deployment workflow](.github/workflows/deploy.yml) runs on pushes to `main`
 
 [GitHub workflow artifacts](https://docs.github.com/en/actions/concepts/workflows-and-actions/workflow-artifacts) pass exported assets and built files between jobs.
 
-The user previously confirmed local/home-server builds, screenshot HTTP 200, GitHub Pages data/images, and a committed/pushed release building successfully. Current interface translations were manually checked by the user. The GitHub fallback path has not been explicitly exercised in this session.
+The owner previously confirmed local/home-server builds, screenshot HTTP 200, GitHub Pages data/images, and interface translations. During Skills development, the standalone exporter reported 1 visible project and 22 technologies; the owner tested the final proficiency translation and marked the feature ready. No fresh build/deployment or GitHub fallback execution was verified for this documentation update.
