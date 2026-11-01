@@ -546,3 +546,92 @@ h1 span {
 		grid-template-columns: 1fr;
 	}
 }
+
+/* Desktop: navigation stays visible; hide the toggle. */
+.site-toolbar .mobile-menu-toggle {
+	display: none;
+}
+
+@media (max-width: 1110px) {
+	.site-toolbar.p-toolbar {
+		display: grid;
+		grid-template-columns: 5.5rem minmax(0, 1fr) 5.5rem;
+		grid-template-areas:
+			"toggle brand preferences"
+			"navigation navigation navigation";
+		column-gap: 0.5rem;
+		row-gap: 0;
+		align-items: center;
+	}
+
+	.site-toolbar.mobile-menu-open {
+		row-gap: 0.75rem;
+	}
+
+	.site-toolbar .p-toolbar-start {
+		display: contents;
+	}
+
+	.site-toolbar .brand {
+		grid-area: brand;
+		min-width: 0;
+		text-align: center;
+		overflow-wrap: anywhere;
+	}
+
+	.site-toolbar .mobile-menu-toggle {
+		grid-area: toggle;
+		display: inline-flex;
+		justify-self: start;
+	}
+
+	.site-toolbar .p-toolbar-end {
+		grid-area: preferences;
+		display: flex;
+		justify-self: end;
+		min-width: 0;
+	}
+
+	.site-toolbar .toolbar-preferences {
+		width: auto;
+		flex-wrap: nowrap;
+		gap: 0.5rem;
+	}
+
+	.site-toolbar .preference-label,
+	.site-toolbar .toolbar-preferences .p-select-dropdown {
+		display: none;
+	}
+
+	.site-toolbar .toolbar-preferences .p-select {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+
+	.site-toolbar .toolbar-preferences .p-select-label {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+	}
+
+	.site-toolbar .p-toolbar-center {
+		grid-area: navigation;
+		display: none;
+		min-width: 0;
+	}
+
+	.site-toolbar.mobile-menu-open .p-toolbar-center {
+		display: flex;
+	}
+
+	.site-toolbar .main-nav {
+		width: 100%;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+
+	.site-toolbar .main-nav a {
+		padding-block: 0.2rem;
+	}
+}

@@ -73,6 +73,8 @@ const baseUrl = import.meta.env.BASE_URL
 
 const primevue = usePrimeVue()
 
+const mobileMenuOpen = ref(false)
+
 function projectText(value) {
 	if (typeof value === 'string') return value
 	if (!value || typeof value !== 'object') return ''
@@ -174,12 +176,13 @@ onMounted(async () => {
 	<div class="site-shell">
 		<MatrixRain v-if="selectedTheme === 'matrix'" />
 		<header class="site-header">
-			<Toolbar class="site-toolbar" :aria-label="i18n('accessibility.main_navigation')">
+			<Toolbar class="site-toolbar" v-bind:class="{ 'mobile-menu-open': mobileMenuOpen }" :aria-label="i18n('accessibility.main_navigation')">
 				<template #start>
+					<Button v-ripple type="button" class="mobile-menu-toggle" :icon="mobileMenuOpen ? 'pi pi-times' : 'pi pi-bars'" :aria-label="i18n(mobileMenuOpen ? 'accessibility.close_menu' : 'accessibility.open_menu')" :aria-expanded="mobileMenuOpen" aria-controls="header-navigation" text @click="mobileMenuOpen = !mobileMenuOpen" />
 					<a class="brand" href="#home" :aria-label="i18n('accessibility.home')" v-html="i18n('navigation.presentation')"></a>
 				</template>
 				<template #center>
-					<nav class="main-nav" :aria-label="i18n('accessibility.main_sections')">
+					<nav id="header-navigation" class="main-nav" :aria-label="i18n('accessibility.main_sections')">
 						<a href="#projects" v-html="i18n('navigation.projects')"></a>
 						<a href="#about" v-html="i18n('navigation.about')"></a>
 						<a href="#skills" v-html="i18n('navigation.skills')"></a>
@@ -187,7 +190,7 @@ onMounted(async () => {
 					</nav>
 				</template>
 				<template #end>
-					<div class="toolbar-preferences">
+					<div id="header-preferences" class="toolbar-preferences">
 						<Select v-ripple v-model="selectedLanguage" :options="languageOptions" option-label="name" option-value="code" :aria-label="i18n('preferences.choose_language')" class="language-select">
 							<template #option="{ option }">
 								<span class="language-option">
@@ -200,7 +203,7 @@ onMounted(async () => {
 								<span v-if="getLanguageOption(value)" class="language-option">
 									<span v-if="value === 'wd'" class="language-flag ghaster-icon" aria-hidden="true"></span>
 									<img v-else class="language-flag" :src="getLanguageOption(value).flag" alt="" aria-hidden="true"/>
-									<span>{{ getLanguageOption(value).name }}</span>
+									<span class="preference-label">{{ getLanguageOption(value).name }}</span>
 								</span>
 							</template>
 						</Select>
@@ -212,11 +215,8 @@ onMounted(async () => {
 							</template>
 							<template #value="{ value }">
 								<span v-if="value">
-									<i
-										:class="themes.find((item) => item.theme === value)?.icon"
-										aria-hidden="true"
-									></i>
-									{{ i18n(`themes.${value}`) }}
+									<i :class="themes.find((item) => item.theme === value)?.icon" aria-hidden="true"></i>
+									<span class="preference-label">&nbsp;{{ i18n(`themes.${value}`) }}</span>
 								</span>
 							</template>
 						</Select>

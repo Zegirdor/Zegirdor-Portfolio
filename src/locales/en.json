@@ -91,7 +91,9 @@
     "accessibility": {
         "main_navigation": "Main navigation",
         "home": "ZegirdorDev home",
-        "main_sections": "Main sections"
+        "main_sections": "Main sections",
+        "open_menu": "Open menu",
+        "close_menu": "Close menu"
     },
     "preferences": {
         "choose_language": "Choose language",
