@@ -7,6 +7,7 @@ const { Pool } = pg
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outputDirectory = path.join(projectRoot, 'public', 'data')
 const screenshotDirectory = path.join(projectRoot, 'public', 'images', 'project_screenshots') // TODO Sincronize to a single variable to match line 70
+const defaultImageName = "default-project-image.svg";
 
 const requiredEnvironment = ['PGHOST', 'PGPORT', 'PGDATABASE', 'PGUSER', 'PGPASSWORD']
 const missingEnvironment = requiredEnvironment.filter((name) => !process.env[name])
@@ -18,43 +19,49 @@ if (missingEnvironment.length > 0) {
 const pool = new Pool()
 
 try {
-	const sql = [
-		'SELECT',
-		'  repository.id,',
-		'  repository.name,',
-		'  repository.description,',
-		'  repository.git_repository_url AS "repositoryUrl",',
-		'  repository.demo_url AS "demoUrl",',
-		'  repository.screenshot_path AS "screenshotPath",',
-		'  repository.version,',
-		"  to_char(repository.project_date, 'YYYY-MM-DD') AS \"projectDate\",",
-		'  repository.authors,',
-		'  repository.completion_percent AS completion,',
-		'  COALESCE(',
-		'    array_agg(technology.name ORDER BY technology.name)',
-		'      FILTER (WHERE technology.id IS NOT NULL),',
-		'    ARRAY[]::text[]',
-		'  ) AS technologies',
-		'FROM repository',
-		'LEFT JOIN repository_technology',
-		'  ON repository_technology.repository_id = repository.id',
-		'LEFT JOIN technology',
-		'  ON technology.id = repository_technology.technology_id',
-		'WHERE repository.is_visible = TRUE',
-		'GROUP BY repository.id',
-		'ORDER BY repository.display_order, repository.project_date DESC NULLS LAST, repository.id',
-	].join('\n') // TODO: Change this later to a single quote.
+	const projects_sql =
+		`SELECT
+		  repository.id,
+		  repository.name,
+		  repository.description,
+		  repository.git_repository_url AS "repositoryUrl",
+		  repository.demo_url AS "demoUrl",
+		  repository.screenshot_path AS "screenshotPath",
+		  repository.version,
+		  to_char(repository.project_date, 'YYYY-MM-DD') AS "projectDate",
+		  repository.authors,
+		  repository.completion_percent AS completion,
+		  COALESCE(
+		    array_agg(technology.name ORDER BY technology.name)
+		      FILTER (WHERE technology.id IS NOT NULL),
+		    ARRAY[]::text[]
+		  ) AS technologies
+		FROM repository
+		LEFT JOIN repository_technology
+		  ON repository_technology.repository_id = repository.id
+		LEFT JOIN technology
+		  ON technology.id = repository_technology.technology_id
+		WHERE repository.is_visible = TRUE
+		GROUP BY repository.id
+		ORDER BY repository.display_order, repository.project_date DESC NULLS LAST, repository.id` // DONE: Change this later to a template literal.
 
-	const { rows } = await pool.query(sql)
+	const { rows } = await pool.query(projects_sql)
 	const projects = []
+
+	const technologies_sql =
+		`SELECT ID, Name, Category, Proficiency
+		FROM Technology
+		ORDER BY Category, Name` // DONE: Change this later to a single quote.
+
+	const { rows: technologies } = await pool.query(technologies_sql)
 
 	// Export the shared default image once, using the local override when configured.
 	const defaultScreenshotSource = process.env.PORTFOLIO_SCREENSHOT_DIR
-		? path.resolve(projectRoot, process.env.PORTFOLIO_SCREENSHOT_DIR, 'default-project-image.svg')
+		? path.resolve(projectRoot, process.env.PORTFOLIO_SCREENSHOT_DIR, defaultImageName)
 		: '/mnt/hdd320_1/assets/zegirdor_portfolio/default-project-image.svg'
 
 	const defaultScreenshotDestination = path.join(
-		projectRoot, 'public', 'images', 'default-project-image.svg'
+		projectRoot, 'public', 'images', defaultImageName
 	)
 
 	await mkdir(path.dirname(defaultScreenshotDestination), { recursive: true })
@@ -95,7 +102,7 @@ try {
 				)
 			}
 
-			defaultScreenshotUrl = 'images/' + 'default-project-image.svg'
+			defaultScreenshotUrl = 'images/' + defaultImageName
 		}
 
 		projects.push({
@@ -119,8 +126,14 @@ try {
 		JSON.stringify(projects, null, 2) + '\n',
 		'utf8',
 	)
+	await writeFile(
+		path.join(outputDirectory, 'technologies.json'),
+		JSON.stringify(technologies, null, 2) + '\n',
+		'utf8',
+	)
 
 	console.info('Exported ' + projects.length + ' visible portfolio project(s).')
+	console.info('Exported ' + technologies.length + ' technolog' + (technologies.length == 1 ? 'y.' : 'ies.'))
 } finally {
 	await pool.end()
 }

@@ -1,9 +1,16 @@
 # Pending Tasks
 
 - [ ] Choose and implement the skills/proficiency display; MeterGroup currently has no data
+  - [x] Export the skills catalog
+  - [x] Render category groups and chips
+    - [ ] Make rendering translations
+    - [ ] Make rendering level Capitalized Text
+  - [ ] Translate labels and style across themes
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
 - [ ] Add a profile picture: https://i.imgur.com/lj5y1Lh.jpeg (replace the URL with another image or use a local image)
 - [ ] Review exporter TODOs: share the screenshot path definition, improve SQL formatting, review the explicit JSON mapping, and remove unused defaultScreenshotUrl state
+- [ ] Add a photo of myself to the page
+- [ ] Fix the header's style on Mobile
 
 # Completed Tasks
 
@@ -43,7 +50,7 @@
 - [x] Keep both languages on one URL; separate language URLs are not planned for this project
 - [x] Refresh README.md for translations, selectors, database export, secrets, local development, and server-first deployment
 - [x] Design the PostgreSQL schema and save initialization/population SQL under database/schema/ and database/data/ without credentials
-- [x] Populate the database with the technology catalog, wedding project, and project/technology associations
+- [x] Populate the database with the skills catalog, wedding project, and project/skills associations
 - [x] Add the build-time PostgreSQL exporter for visible project records and SDB screenshots
 - [x] Render localized JSONB project names/descriptions and resolve image URLs relative to the Vite base
 - [x] Translate project labels, repository/demo actions, and demo-confirmation text

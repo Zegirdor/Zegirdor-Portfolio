@@ -12,6 +12,7 @@
         "presentation": "Zegirdor<span>Dev</span>&nbsp;-&nbsp;Software&nbsp;Architect",
         "projects": "Projects",
         "about": "About me",
+        "skills": "My stack",
         "contact": "Get in touch"
     },
     "themes": {
@@ -54,6 +55,20 @@
         "title_2": "Curiosity, craft, and continuous learning.",
         "info_1": "I’m a software architect, passionate about building practical, user-focused web applications. I work primarily with JavaScript, Node.js, Vue.js, Java + Spring and modern frontend technologies, with experience in API development and database-driven applications. I also administer Linux servers and am learning self-hosting and deployment automation with continuous integration and delivery (CI/CD) while expanding my skills in backend development and software engineering.",
         "skills_summary": "Skills summary"
+    },
+    "skills_section": {
+        "title_1": "My stack",
+        "title_2": "The tools behind the ideas I bring to life.",
+        "info_1": "A good developer is not the one who knows every language in the stack, but the one who knows it's stack.",
+        "skills_disclaimer": "Proficiency levels based on my own experience."
+    },
+    "proficiency": {
+        "proficient": "Proficient",
+        "very_high": "Very high",
+        "high": "High",
+        "average": "Average",
+        "low": "Low",
+        "basic": "Basic"
     },
     "contact_section": {
         "title_1": "Get in touch",

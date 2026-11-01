@@ -338,11 +338,13 @@ h1 span {
 }
 
 .about-section h2,
+.skills-section h2,
 .contact-section h2 {
   max-width: 520px;
 }
 
 .about-copy,
+.skills-copy,
 .contact-section > p {
   align-self: center;
   color: var(--p-text-muted-color);
@@ -375,10 +377,15 @@ h1 span {
   }
 
   .about-section,
+  .skills-section,
   .contact-section {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
+}
+
+.skills-section {
+  padding-block: 0rem 3rem;
 }
 
 @media (max-width: 560px) {
@@ -452,4 +459,49 @@ h1 span {
 	mask-size: contain;
 	mask-position: center;
 	mask-repeat: no-repeat;
+}
+
+/* Skills styles */
+.skills-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1.5rem;
+	color: var(--p-text-color);
+}
+
+.skill-category h3 {
+	margin: 0 0 0.75rem;
+}
+
+.skill-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.skill-chip {
+	max-width: 100%;
+	flex-wrap: wrap;
+}
+
+.skill-proficiency {
+	padding-inline-start: 0.5rem;
+	border-inline-start: 1px solid var(--p-content-border-color);
+	color: var(--p-text-muted-color);
+  text-transform: capitalize;
+}
+
+.skills-disclaimer {
+  margin-block: 3rem 0rem;
+  padding: 0;
+}
+
+.skills-disclaimer p {
+  color: gray;
+}
+
+@media (max-width: 560px) {
+	.skills-grid {
+		grid-template-columns: 1fr;
+	}
 }

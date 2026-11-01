@@ -1,0 +1,134 @@
+[
+  {
+    "id": "10",
+    "name": "PostgreSQL",
+    "category": "database",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "11",
+    "name": "SQL Server",
+    "category": "database",
+    "proficiency": "high"
+  },
+  {
+    "id": "9",
+    "name": "Angular.JS",
+    "category": "framework",
+    "proficiency": "high"
+  },
+  {
+    "id": "21",
+    "name": "Express.JS",
+    "category": "framework",
+    "proficiency": "high"
+  },
+  {
+    "id": "22",
+    "name": "Tailwind CSS",
+    "category": "framework",
+    "proficiency": "high"
+  },
+  {
+    "id": "17",
+    "name": "Vue.js",
+    "category": "framework",
+    "proficiency": "average"
+  },
+  {
+    "id": "3",
+    "name": "C#",
+    "category": "language",
+    "proficiency": "average"
+  },
+  {
+    "id": "6",
+    "name": "CSS",
+    "category": "language",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "5",
+    "name": "HTML5",
+    "category": "language",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "2",
+    "name": "Java",
+    "category": "language",
+    "proficiency": "high"
+  },
+  {
+    "id": "4",
+    "name": "JavaScript",
+    "category": "language",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "1",
+    "name": "PHP",
+    "category": "language",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "7",
+    "name": "SQL",
+    "category": "language",
+    "proficiency": "very high"
+  },
+  {
+    "id": "19",
+    "name": "PrimeVue",
+    "category": "library",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "20",
+    "name": "Vue I18n",
+    "category": "library",
+    "proficiency": "high"
+  },
+  {
+    "id": "14",
+    "name": "Claude Code",
+    "category": "tool",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "15",
+    "name": "Codex",
+    "category": "tool",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "12",
+    "name": "Git",
+    "category": "tool",
+    "proficiency": "very high"
+  },
+  {
+    "id": "13",
+    "name": "GitHub",
+    "category": "tool",
+    "proficiency": "proficient"
+  },
+  {
+    "id": "8",
+    "name": "Node.js",
+    "category": "tool",
+    "proficiency": "high"
+  },
+  {
+    "id": "16",
+    "name": "Postman",
+    "category": "tool",
+    "proficiency": "average"
+  },
+  {
+    "id": "18",
+    "name": "Vite",
+    "category": "tool",
+    "proficiency": "average"
+  }
+]

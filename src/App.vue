@@ -9,7 +9,6 @@ import Button from 'primevue/button'
 import Card from 'primevue/card'
 import Chip from 'primevue/chip'
 import DataView from 'primevue/dataview'
-import MeterGroup from 'primevue/metergroup'
 import Popover from 'primevue/popover'
 import ProgressSpinner from 'primevue/progressspinner'
 import Skeleton from 'primevue/skeleton'
@@ -21,8 +20,11 @@ import spanishFlag from './assets/locale_flags/es_64x64.png'
 import ghasterFlag from './assets/locale_flags/wd_128x128.png'
 
 const projects = ref([])
-const loading = ref(true)
-const loadError = ref(false)
+const projectsLoading = ref(true)
+const projectsLoadError = ref(false)
+const skills = ref([])
+const skillsLoading = ref(true)
+const skillsLoadError = ref(false)
 const layout = ref('grid')
 const selectedTechnologies = ref([])
 const themes = [{theme: "light", icon: "pi pi-sun", preset: Aura}, {theme : "dark", icon : "pi pi-moon", preset: Aura}, {theme : "matrix", icon : "pi pi-code", preset: Matrix}]
@@ -47,6 +49,22 @@ const visibleProjects = computed(() => {
 			(project.technologies ?? []).includes(technology),
 		),
 	)
+})
+
+const skillGroups = computed(() => {
+	const groups = new Map()
+
+	for (const technology of skills.value) {
+		if (!groups.has(technology.category)) {
+			groups.set(technology.category, [])
+		}
+
+		groups.get(technology.category).push(technology)
+	}
+
+	return Array.from(groups, ([category, items]) => ({
+		category, items
+	}))
 })
 
 const { t: i18n, locale } = useI18n();
@@ -124,15 +142,29 @@ function getInitialLanguage() {
 	return languageOptions.some((option) => option.code === savedLanguage) ? savedLanguage : 'es'
 }
 
+/* Load projects after the page loads */
 onMounted(async () => {
 	try {
 		const response = await fetch(`${import.meta.env.BASE_URL}data/projects.json`)
 		if (!response.ok) throw new Error('Project data is not available yet.')
 		projects.value = await response.json()
+} catch {
+	projectsLoadError.value = true
+} finally {
+	projectsLoading.value = false
+}
+})
+
+/* Load technologies after the page loads */
+onMounted(async () => {
+	try {
+		const response = await fetch(`${import.meta.env.BASE_URL}data/technologies.json`)
+		if (!response.ok) throw new Error('Technologies data is not available yet.')
+		skills.value = await response.json()
 	} catch {
-		loadError.value = true
+		skillsLoadError.value = true
 	} finally {
-		loading.value = false
+		skillsLoading.value = false
 	}
 })
 </script>
@@ -149,6 +181,7 @@ onMounted(async () => {
 					<nav class="main-nav" :aria-label="i18n('accessibility.main_sections')">
 						<a href="#projects" v-html="i18n('navigation.projects')"></a>
 						<a href="#about" v-html="i18n('navigation.about')"></a>
+						<a href="#skills" v-html="i18n('navigation.skills')"></a>
 						<a href="#contact" v-html="i18n('navigation.contact')"></a>
 					</nav>
 				</template>
@@ -219,7 +252,7 @@ onMounted(async () => {
 					<Button v-if="selectedTechnologies.length" :label="i18n('projects_section.clear_filters')" text size="small" @click="selectedTechnologies = []" />
 				</div>
 
-				<div v-if="loading" class="project-grid" :aria-label="i18n('projects_section.loading')">
+				<div v-if="projectsLoading" class="project-grid" :aria-label="i18n('projects_section.loading')">
 					<Card v-for="item in 3" :key="item" class="project-card">
 						<template #content>
 							<Skeleton class="project-skeleton-image" />
@@ -229,7 +262,7 @@ onMounted(async () => {
 						</template>
 					</Card>
 				</div>
-				<p v-else-if="loadError" class="empty-state" role="status" v-html="i18n('projects_section.missing_database')"></p>
+				<p v-else-if="projectsLoadError" class="empty-state" role="status" v-html="i18n('projects_section.missing_database')"></p>
 
 				<DataView v-else :value="visibleProjects" :layout="layout" class="project-listing">
 					<template #grid="{ items }">
@@ -299,7 +332,27 @@ onMounted(async () => {
 				<div><p class="eyebrow" v-html="i18n('about_section.title_1')"></p><h2 v-html="i18n('about_section.title_2')"></h2></div>
 				<div class="about-copy">
 					<p v-html="i18n('about_section.info_1')"></p>
-					<MeterGroup :value="[]" :aria-label="i18n('about_section.skills_summary')" />
+				</div>
+			</section>
+
+			<section id="skills" class="skills-section section-wrap">
+				<div><p class="eyebrow" v-html="i18n('skills_section.title_1')"></p><h2 v-html="i18n('skills_section.title_2')"></h2></div>
+				<div class="skills-copy">
+					<p v-html="i18n('skills_section.info_1')"></p>
+					<div class="skills-grid">
+						<section v-for="group in skillGroups" :key="group.category" class="skill-category">
+							<h3>{{ group.category }}</h3>
+							<div class="skill-chips">
+								<Chip v-for="skill in group.items" :key="skill.id" class="skill-chip">
+									<span>{{ skill.name }}</span>
+									<span class="skill-proficiency" v-html="i18n(`proficiency.${skill.proficiency.replaceAll(' ', '_')}`)"></span>
+								</Chip>
+							</div>
+						</section>
+					</div>
+				</div>
+				<div class="skills-disclaimer">
+					<p class="eyebrow" v-html="i18n('skills_section.skills_disclaimer')"></p>
 				</div>
 			</section>
 
