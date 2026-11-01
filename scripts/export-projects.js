@@ -6,7 +6,8 @@ import pg from 'pg'
 const { Pool } = pg
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const outputDirectory = path.join(projectRoot, 'public', 'data')
-const screenshotDirectory = path.join(projectRoot, 'public', 'images', 'project_screenshots') // DONE Sincronize to a single variable to match line 70
+const screenshotURLDirectory = path.join('images', 'project_screenshots') // Browser URL
+const screenshotDirectory = path.join(projectRoot, 'public', screenshotURLDirectory) // Exporter path
 const defaultImageName = "default-project-image.svg";
 
 const requiredEnvironment = ['PGHOST', 'PGPORT', 'PGDATABASE', 'PGUSER', 'PGPASSWORD']
@@ -60,9 +61,7 @@ try {
 		? path.resolve(projectRoot, process.env.PORTFOLIO_SCREENSHOT_DIR, defaultImageName)
 		: '/mnt/hdd320_1/assets/zegirdor_portfolio/default-project-image.svg'
 
-	const defaultScreenshotDestination = path.join(
-		projectRoot, 'public', 'images', defaultImageName
-	)
+	const defaultScreenshotDestination = path.join(projectRoot, 'public', 'images', defaultImageName)
 
 	await mkdir(path.dirname(defaultScreenshotDestination), { recursive: true })
 	await copyFile(defaultScreenshotSource, defaultScreenshotDestination)
@@ -70,7 +69,6 @@ try {
 
 	for (const row of rows) {
 		let screenshotUrl = null
-		let defaultScreenshotUrl = null
 
 		if (row.screenshotPath) {
 			try {
@@ -93,7 +91,7 @@ try {
 				await copyFile(screenshotSource, destination)
 				await chmod(destination, 0o644)
 				
-				screenshotUrl = 'images/project_screenshots/' + screenshotFileName
+				screenshotUrl = screenshotURLDirectory + screenshotFileName
 			} catch (error) {
 				console.warn(
 					`Using the default screenshot for project ID ${row.id}
@@ -101,8 +99,6 @@ try {
 					Error: ${(error.code ?? error.message ?? "Error retrieving the error message...")}`
 				)
 			}
-
-			defaultScreenshotUrl = 'images/' + defaultImageName
 		}
 
 		projects.push({

@@ -2,7 +2,7 @@
 
 - [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
 - [ ] Finish exporter cleanup: consolidate generated screenshot directory/URL definitions and remove the unused defaultScreenshotUrl variable
-- [ ] The "skills" nav button goes way too low.
+- [x] The "skills" nav button goes way too low.
 
 # Completed Tasks
 
