@@ -1,11 +1,11 @@
 # Pending Tasks
 
-- [ ] Decide whether to add a contact submission form and, if so, choose its endpoint/service
-- [ ] Finish exporter cleanup: consolidate generated screenshot directory/URL definitions and remove the unused defaultScreenshotUrl variable
-- [x] The "skills" nav button goes way too low.
+Version 1.0 is complete. No pending tasks remain for this version. Future work is tracked in [Future implementations.md](<Future implementations.md>).
 
 # Completed Tasks
 
+- [x] Finish exporter cleanup: consolidate generated screenshot directory/URL definitions and remove the unused defaultScreenshotUrl variable
+- [x] Adjust anchor scroll offsets for the sticky header: 10vh for Skills and 5vh for Projects, About, and Contact
 - [x] Add a locally bundled hero profile picture with translated alternative text and responsive styling
 - [x] Add collapsible mobile navigation with centered brand and always-visible icon-only preference selectors
 - [x] Translate Skills category headings and provide a missing-category translation fallback
