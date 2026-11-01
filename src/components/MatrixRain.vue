@@ -8,6 +8,10 @@ onMounted(() => {
   const canvas = canvasRef.value;
   const ctx = canvas.getContext('2d');
 
+  const motionPreference = window.matchMedia(
+    '(prefers-reduced-motion: reduce)',
+  )
+
   // Set full screen dimensions
   const resizeCanvas = () => {
     canvas.width = window.innerWidth;
@@ -24,14 +28,16 @@ onMounted(() => {
   // Calculate columns based on width and font size
   let columns = Math.floor(canvas.width / fontSize);
 
+  const randomStartingRow = () => -Math.floor(Math.random() * Math.ceil(canvas.height / fontSize))
+  
   // Array to track the y-coordinate of each rain drop per column
-  let rainDrops = Array(columns).fill(1);
+  let rainDrops = Array.from({ length: columns }, randomStartingRow)
 
   // Recalculate columns seamlessly if window size changes
   const updateColumns = () => {
     columns = Math.floor(canvas.width / fontSize);
     const oldDrops = [...rainDrops];
-    rainDrops = Array(columns).fill(1).map((_, i) => oldDrops[i] || Math.floor(Math.random() * -canvas.height));
+    rainDrops = Array.from( { length: columns }, (_, i) => oldDrops[i] ?? randomStartingRow())
   };
   window.addEventListener('resize', updateColumns);
 
@@ -72,13 +78,29 @@ onMounted(() => {
   };
 
   // Start the animation
-  animationFrameId = requestAnimationFrame(draw);
+  const applyMotionPreference = () => {
+    if (motionPreference.matches) {
+      cancelAnimationFrame(animationFrameId)
+      animationFrameId = null
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      return
+    }
+
+    if (animationFrameId == null) {
+      lastDrawTime = 0
+      animationFrameId = requestAnimationFrame(draw)
+    }
+  }
+
+  motionPreference.addEventListener('change', applyMotionPreference)
+  applyMotionPreference()
 
   // Cleanup event listeners and animation loop on unmount
   onUnmounted(() => {
     cancelAnimationFrame(animationFrameId);
     window.removeEventListener('resize', resizeCanvas);
     window.removeEventListener('resize', updateColumns);
+    motionPreference.removeEventListener('change', applyMotionPreference)
   });
 });
 </script>

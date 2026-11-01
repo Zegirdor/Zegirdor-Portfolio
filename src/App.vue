@@ -176,7 +176,7 @@ onMounted(async () => {
 	<div class="site-shell">
 		<MatrixRain v-if="selectedTheme === 'matrix'" />
 		<header class="site-header">
-			<Toolbar class="site-toolbar" v-bind:class="{ 'mobile-menu-open': mobileMenuOpen }" :aria-label="i18n('accessibility.main_navigation')">
+			<Toolbar class="site-toolbar" v-bind:class="{ 'mobile-menu-open': mobileMenuOpen, 'site-toolbar-matrix-theme':selectedTheme === 'matrix' }" :aria-label="i18n('accessibility.main_navigation')">
 				<template #start>
 					<Button v-ripple type="button" class="mobile-menu-toggle" :icon="mobileMenuOpen ? 'pi pi-times' : 'pi pi-bars'" :aria-label="i18n(mobileMenuOpen ? 'accessibility.close_menu' : 'accessibility.open_menu')" :aria-expanded="mobileMenuOpen" aria-controls="header-navigation" text @click="mobileMenuOpen = !mobileMenuOpen" />
 					<a class="brand" href="#home" :aria-label="i18n('accessibility.home')" v-html="i18n('navigation.presentation')"></a>

@@ -635,3 +635,15 @@ h1 span {
 		padding-block: 0.2rem;
 	}
 }
+
+@media (min-width: 1418px) {
+  .site-toolbar.site-toolbar-matrix-theme {
+    width: min(1400px, calc(100% - 32px));
+  }
+}
+
+@media (min-width: 1110px) and (max-width: 1417px) {
+  .site-toolbar.site-toolbar-matrix-theme {
+    flex-wrap: nowrap;
+  }
+}

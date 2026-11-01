@@ -6,7 +6,7 @@
 - [x] Fix the header's style on Mobile
 - [x] Translate Skills category headings, which currently display raw database values
 - [x] Display translated Skills loading, error, and empty states using the existing skillsLoading/skillsLoadError refs
-- [ ] Respect prefers-reduced-motion for Matrix rain; current source still animates unconditionally
+- [x] Respect prefers-reduced-motion for Matrix rain; current source still animates unconditionally
 - [ ] Review Matrix rain resize/drop coordinates and add devicePixelRatio-aware canvas scaling
 - [ ] Handle screenshot paths without a file extension through the default-image fallback; current validation still throws before the catch
 
