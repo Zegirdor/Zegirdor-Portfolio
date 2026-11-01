@@ -62,6 +62,15 @@
         "info_1": "A good developer is not the one who knows every language in the stack, but the one who knows it's stack.",
         "skills_disclaimer": "Proficiency levels based on my own experience."
     },
+    "skill_categories": {
+        "language": "Languages",
+        "framework": "Frameworks",
+        "library": "Libraries",
+        "database": "Databases",
+        "tool": "Tools",
+        "missing": "Missing category",
+        "other": "Other"
+    },
     "proficiency": {
         "proficient": "Proficient",
         "very_high": "Very high",

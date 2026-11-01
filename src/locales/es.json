@@ -62,6 +62,15 @@
         "info_1": "Un buen desarrollador no es quien conoce todos los lenguajes, sino quien conoce bien las tecnologías con las que trabaja.",
         "skills_disclaimer": "Niveles de dominio basados en mi propia experiencia."
     },
+    "skill_categories": {
+        "language": "Lenguajes",
+        "framework": "Frameworks",
+        "library": "Bibliotecas",
+        "database": "Bases de datos",
+        "tool": "Herramientas",
+        "missing": "No categorizado",
+        "other": "Otros"
+    },
     "proficiency": {
         "proficient": "Dominio avanzado",
         "very_high": "Muy alto",

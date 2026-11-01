@@ -471,6 +471,7 @@ h1 span {
 
 .skill-category h3 {
 	margin: 0 0 0.75rem;
+  text-transform: capitalize;
 }
 
 .skill-chips {

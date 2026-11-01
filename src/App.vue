@@ -67,7 +67,7 @@ const skillGroups = computed(() => {
 	}))
 })
 
-const { t: i18n, locale } = useI18n();
+	const { t: i18n, te: hasTranslation, locale } = useI18n();
 const baseUrl = import.meta.env.BASE_URL
 
 const primevue = usePrimeVue()
@@ -341,7 +341,7 @@ onMounted(async () => {
 					<p v-html="i18n('skills_section.info_1')"></p>
 					<div class="skills-grid">
 						<section v-for="group in skillGroups" :key="group.category" class="skill-category">
-							<h3>{{ group.category }}</h3>
+							<h3>{{ i18n(hasTranslation(`skill_categories.${group.category}`) ? `skill_categories.${group.category}` : 'skill_categories.missing') }}</h3>
 							<div class="skill-chips">
 								<Chip v-for="skill in group.items" :key="skill.id" class="skill-chip">
 									<span>{{ skill.name }}</span>
