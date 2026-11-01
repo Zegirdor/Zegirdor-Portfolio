@@ -85,7 +85,11 @@
     "contact_section": {
         "title_1": "Get in touch",
         "info_1": "Currently open to new opportunities in web development and software engineering.",
-        "info_2": "<span>Cellphone: Available upon request&nbsp;<i class=\"pi pi-whatsapp\"></i></span><br><span>E-Mail(s):<br>Zegirdor2165{'@'}Gmail.com</span><br><span>GitHub:<br><a href=\"https://github.com/Zegirdor\" class=\"eyebrow\">Zegirdor&nbsp;<i class=\"pi pi-github\"></i></a></span><br><span>LinkedIn:<br><a href=\"https://www.linkedin.com/in/luis-%C3%A1ngel-moreno-rodr%C3%ADguez-09bb301a7/\" class=\"eyebrow\">Luis Ángel Moreno&nbsp;<i class=\"pi pi-linkedin\"></i></a></span>"
+        "info_phone": "<span>Cellphone: Available upon request&nbsp;<i class=\"pi pi-whatsapp\"></i></span>",
+        "info_email": "<span>E-Mail(s):<br>Zegirdor2165{'@'}Gmail.com</span>",
+        "info_github": "<span>GitHub:<br><a href=\"https://github.com/Zegirdor\" class=\"eyebrow\">Zegirdor&nbsp;<i class=\"pi pi-github\"></i></a></span>",
+        "info_linkedin": "<span>LinkedIn:<br><a href=\"https://www.linkedin.com/in/luis-%C3%A1ngel-moreno-rodr%C3%ADguez-09bb301a7/\" class=\"eyebrow\">Luis Ángel Moreno&nbsp;<i class=\"pi pi-linkedin\"></i></a></span>",
+        "info_stack_overflow": "<span>Stack Overflow:<br><a href=\"https://stackoverflow.com/users/18293700/zegirdor\" class=\"eyebrow\">Zegirdor&nbsp;<i class=\"pi pi-database\"></i></a></span>"
     },
     "footer": {
         "title_2": "Built with Node.JS, Vue, Vite and PrimeVue"

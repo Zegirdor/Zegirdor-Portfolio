@@ -374,8 +374,20 @@ onMounted(async () => {
 			</section>
 
 			<section id="contact" class="contact-section section-wrap">
-				<div><p class="eyebrow" v-html="i18n('contact_section.title_1')"></p><h2 v-html="i18n('contact_section.info_1')"></h2></div>
-				<p v-html="i18n('contact_section.info_2')"></p>
+				<div id="contact-left">
+					<p class="eyebrow" v-html="i18n('contact_section.title_1')"></p><h2 v-html="i18n('contact_section.info_1')"></h2>
+				</div>
+				<div id="contact-right">
+					<p v-html="i18n('contact_section.info_phone')"></p>
+
+					<p v-html="i18n('contact_section.info_email')"></p>
+
+					<p v-html="i18n('contact_section.info_github')"></p>
+
+					<p v-html="i18n('contact_section.info_linkedin')"></p>
+
+					<p v-html="i18n('contact_section.info_stack_overflow')"></p>
+				</div>
 			</section>
 		</main>
 
