@@ -40,6 +40,23 @@ a {
   color: var(--p-text-color);
 }
 
+section[id='projects'] {
+	scroll-margin-top: 5vh;
+}
+
+section[id='about'] {
+	scroll-margin-top: 5vh;
+}
+
+section[id='skills'] {
+	scroll-margin-top: 10vh;
+	/* scroll-margin-top: 80px; */
+}
+
+section[id='contact'] {
+	scroll-margin-top: 5vh;
+}
+
 .section-wrap {
   width: min(1120px, calc(100% - 48px));
   margin-inline: auto;

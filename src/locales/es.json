@@ -52,10 +52,9 @@
         "unnamed_project": "este proyecto"
     },
     "about_section": {
-        "title_1": "Algo sobre mi",
+        "title_1": "Sobre mi",
         "title_2": "Proactivo, planeador, y buen aprendiz.",
-        "info_1": "Soy un arquitecto de software a quien le apasiona crear aplicaciones centradas en las necesidades de los usuarios. Trabajo principalmente con JavaScript, Node.js, Vue.js, Java con Spring y tecnologías de desarrollo frontend. Tengo experiencia en el desarrollo de APIs y aplicaciones conectadas a bases de datos. También administro servidores Linux, y estoy aprendiendo el alojamiento de servicios en servidores propios y la automatización de despliegues con entrega continua (CI/CD), mientras continúo ampliando mis conocimientos en desarrollo backend e ingeniería de software.",
-        "skills_summary": "Sobre mis habilidades"
+        "info_1": "Soy un arquitecto de software a quien le apasiona crear aplicaciones centradas en las necesidades de los usuarios. Trabajo principalmente con JavaScript, Node.js, Vue.js, Java con Spring y tecnologías de desarrollo frontend. Tengo experiencia en el desarrollo de APIs y aplicaciones conectadas a bases de datos. También administro servidores Linux, y estoy aprendiendo el alojamiento de servicios en servidores propios y la automatización de despliegues con entrega continua (CI/CD), mientras continúo ampliando mis conocimientos en desarrollo backend e ingeniería de software."
     },
     "skills_section": {
         "title_1": "Lenguajes y Tecnologías",

@@ -54,8 +54,7 @@
     "about_section": {
         "title_1": "A little about me",
         "title_2": "Curiosity, craft, and continuous learning.",
-        "info_1": "I’m a software architect, passionate about building practical, user-focused web applications. I work primarily with JavaScript, Node.js, Vue.js, Java + Spring and modern frontend technologies, with experience in API development and database-driven applications. I also administer Linux servers and am learning self-hosting and deployment automation with continuous integration and delivery (CI/CD) while expanding my skills in backend development and software engineering.",
-        "skills_summary": "Skills summary"
+        "info_1": "I’m a software architect, passionate about building practical, user-focused web applications. I work primarily with JavaScript, Node.js, Vue.js, Java + Spring and modern frontend technologies, with experience in API development and database-driven applications. I also administer Linux servers and am learning self-hosting and deployment automation with continuous integration and delivery (CI/CD) while expanding my skills in backend development and software engineering."
     },
     "skills_section": {
         "title_1": "My stack",
