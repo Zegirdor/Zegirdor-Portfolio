@@ -15,6 +15,11 @@
 	font-family: "MatrixTerminal", "Cascadia Mono", Consolas, "Liberation Mono", monospace;
 }
 
+:root.theme-matrix h1 {
+  /* clamp(2.8rem, 7vw, 5.8rem) */
+	font-size: clamp(2rem, 4vw, 4.4rem);
+}
+
 * {
   box-sizing: border-box;
 }
